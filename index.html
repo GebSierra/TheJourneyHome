@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>He Gave His Life — a journey (globe) | Trinity Bible Church</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
+  background:linear-gradient(180deg,#16244c 0%,#3f4f86 24%,#8a7fae 48%,#e7a98c 74%,#ffd9a0 100%);}
+#scene{position:fixed;inset:0;z-index:1;display:block}
+#mood{position:fixed;inset:0;z-index:2;background:#0a1024;opacity:0;pointer-events:none;transition:opacity .12s linear}
+#spacer{position:relative;z-index:3;height:2200vh;pointer-events:none}
+
+.overlay{position:fixed;left:0;right:0;top:50%;transform:translateY(-50%);z-index:4;display:flex;justify-content:center;align-items:center;text-align:center;padding:0 6vw;pointer-events:none;opacity:0;will-change:opacity}
+.panel{position:relative;max-width:680px;padding:2.1rem 2.6rem}
+.panel::before{content:"";position:absolute;inset:-14px -8px;z-index:-1;border-radius:32px;
+  background:rgba(8,10,22,.36);
+  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+  -webkit-mask:radial-gradient(120% 120% at 50% 50%, #000 50%, transparent 100%);
+  mask:radial-gradient(120% 120% at 50% 50%, #000 50%, transparent 100%);}
+.kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:#ffe6c2;font-weight:600;margin-bottom:1rem;text-shadow:0 2px 16px rgba(0,0,0,.7)}
+.overlay h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(2.1rem,6vw,4.2rem);line-height:1.08;letter-spacing:-.02em;text-shadow:0 3px 26px rgba(0,0,0,.7)}
+.overlay p{font-size:clamp(1.05rem,2.3vw,1.34rem);max-width:600px;margin:1.05rem auto 0;color:#fff7ec;line-height:1.6;text-shadow:0 2px 20px rgba(0,0,0,.8)}
+.overlay .ref{display:inline-block;margin-top:1rem;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:#ffe7bd;text-shadow:0 2px 14px rgba(0,0,0,.75)}
+
+#cue{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:5;color:rgba(255,247,236,.85);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.5);animation:bob 2.4s ease-in-out infinite}
+#cue svg{display:block;margin:.5rem auto 0}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+#hud{position:fixed;left:50%;top:22px;transform:translateX(-50%);z-index:5;font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,247,236,.7);text-shadow:0 2px 12px rgba(0,0,0,.4)}
+
+#cta .btn{display:inline-block;margin:.4rem .4rem 0;padding:.85rem 1.8rem;border-radius:999px;font-weight:600;font-size:.98rem;text-decoration:none;color:#1a1305;background:linear-gradient(180deg,#ffd9a0,#e8b563);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+#cta .btn.ghost{background:none;color:#fff7ec;border:1px solid rgba(255,247,236,.5)}
+.steps{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+.steps span{padding:.5rem 1rem;border-radius:999px;border:1px solid rgba(255,247,236,.35);font-size:.9rem}
+
+#music,#fs{position:fixed;right:18px;z-index:6;width:46px;height:46px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,231,189,.4);background:rgba(10,13,26,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#ffe6c2;transition:transform .25s ease, box-shadow .3s ease}
+#music{bottom:18px}
+#fs{bottom:74px}
+#music:hover,#fs:hover{transform:scale(1.08)}
+#music.on{animation:mring 2.6s ease-out infinite}
+#music.off{animation:attn 2.6s ease-in-out infinite}
+@keyframes mring{0%{box-shadow:0 0 0 0 rgba(255,214,138,.5)}100%{box-shadow:0 0 0 16px rgba(255,214,138,0)}}
+@keyframes attn{0%,100%{box-shadow:0 0 0 0 rgba(255,214,138,0)}50%{box-shadow:0 0 0 9px rgba(255,214,138,.16)}}
+#music.off .note{opacity:.6}
+#fs .ic-exit{display:none}
+#fs.on .ic-enter{display:none}
+#fs.on .ic-exit{display:block}
+#music-hint{position:fixed;right:74px;bottom:23px;z-index:6;font-size:.82rem;font-weight:500;color:#fff4da;letter-spacing:.03em;background:linear-gradient(180deg,rgba(42,30,15,.74),rgba(20,16,10,.74));border:1px solid rgba(255,214,138,.55);padding:.58rem 1rem;border-radius:11px;box-shadow:0 8px 28px rgba(0,0,0,.42);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transform:translateX(10px);transition:opacity .5s ease, transform .5s ease;pointer-events:none;white-space:nowrap;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+#music-hint::after{content:"";position:absolute;right:-7px;bottom:15px;width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:8px solid rgba(255,214,138,.55)}
+#music-hint.show{opacity:1;transform:none;animation:hintbob 1.9s ease-in-out infinite}
+@keyframes hintbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+#loader{position:fixed;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;background:#16244c;color:#ffe6c2;font-size:.8rem;letter-spacing:.25em;text-transform:uppercase;transition:opacity .8s ease}
+#loader.hide{opacity:0;pointer-events:none}
+#tag{position:fixed;left:14px;bottom:12px;z-index:5;font-size:.6rem;letter-spacing:.12em;color:rgba(255,247,236,.55);text-transform:uppercase}
+@media (prefers-reduced-motion: reduce){#cue{animation:none}}
+</style>
+</head>
+<body>
+<div id="loader">Shaping the world…</div>
+<canvas id="scene"></canvas>
+<div id="mood"></div>
+<div id="hud">He Gave His Life · a journey</div>
+
+<div class="overlay" data-s="0.00" data-e="0.10" data-h="0.03">
+  <div class="panel"><div class="kicker">In the beginning</div><h1>God made the world good.</h1></div>
+</div>
+<div class="overlay" data-s="0.10" data-e="0.25" data-h="0.038">
+  <div class="panel"><p>There was no distance between God and man, because there was no sin in the world. And God walked with people.</p><span class="ref">Genesis 1:27 · Psalm 139:14</span></div>
+</div>
+<div class="overlay" data-s="0.255" data-e="0.35" data-h="0.032">
+  <div class="panel"><div class="kicker">But something changed</div><h1>"I'm a good person."</h1><p>But the Bible says your sins "have made a separation between you and your God."</p><span class="ref">Isaiah 59:2</span></div>
+</div>
+<div class="overlay" data-s="0.355" data-e="0.45" data-h="0.032">
+  <div class="panel"><div class="kicker">The problem</div><h1>Mankind chose sin.</h1><p>We are all sinners — born "dead in our sins, separated from Christ, having no hope and without God in the world."</p><span class="ref">Ephesians 2:1, 12</span></div>
+</div>
+<div class="overlay" data-s="0.455" data-e="0.53" data-h="0.032">
+  <div class="panel"><p>God is not a distant idea who shrugs at wrong. He is the holy judge of the earth, and he must punish evil.</p></div>
+</div>
+<div class="overlay" data-s="0.535" data-e="0.625" data-h="0.032">
+  <div class="panel"><div class="kicker">We can't fix it ourselves</div><p>We try — saying prayers, being nice, attending church. But nothing we do can bridge this gap. "For all have sinned and fall short of the glory of God."</p><span class="ref">Romans 3:23</span></div>
+</div>
+<div class="overlay" data-s="0.63" data-e="0.715" data-h="0.032">
+  <div class="panel"><div class="kicker">But God</div><h1>He demonstrates his love.</h1><p>"While we were still sinners, Christ died for us."</p><span class="ref">Romans 5:8</span></div>
+</div>
+<div class="overlay" data-s="0.72" data-e="0.81" data-h="0.032">
+  <div class="panel"><div class="kicker">The good news</div><h1>He gave his life.</h1><p>Jesus died on the cross to take the punishment we deserved. Three days later he rose from the dead — proof that God accepted his sacrifice. Anyone who trusts in him "shall be saved."</p><span class="ref">Romans 10:9</span></div>
+</div>
+<div class="overlay" data-s="0.815" data-e="0.885" data-h="0.032">
+  <div class="panel"><div class="kicker">A free gift</div><p>"By grace you have been saved through faith. It is the gift of God." Repentance is turning from your sin. Faith is trusting in Jesus's sacrifice alone for the forgiveness of your sins.</p><span class="ref">Ephesians 2:8</span></div>
+</div>
+<div class="overlay" data-s="0.89" data-e="0.945" data-h="0.03">
+  <div class="panel"><h1>Will you receive<br>this free gift?</h1><p>Will you trust in Christ alone for the forgiveness of your sins?</p></div>
+</div>
+<div class="overlay" data-s="0.95" data-e="0.985" data-h="0.022">
+  <div class="panel"><div class="kicker">A new creation</div><p>When God forgives you, he makes you new and his Spirit lives in you. One day Jesus will return and make a new heavens and a new earth, and all who trust in him will walk with God forever.</p><span class="ref">2 Corinthians 5:17 · Revelation 21:3–4</span></div>
+</div>
+<div class="overlay" id="cta" data-s="0.985" data-e="1.01" data-h="0.015">
+  <div class="panel">
+    <div class="kicker">Where to go from here</div>
+    <h1 style="font-size:clamp(1.8rem,5vw,3rem)">Take a next step.</h1>
+    <div class="steps"><span>Read the Bible</span><span>Pray and obey</span><span>Join a local church</span></div>
+    <div style="margin-top:1.3rem">
+      <a class="btn" href="https://www.mytrinitybible.com/contact" target="_blank" rel="noopener">Reach out to us</a>
+      <a class="btn ghost" href="https://hegavehis.life" target="_blank" rel="noopener">More resources</a>
+    </div>
+  </div>
+</div>
+
+<audio id="bgm" loop preload="auto"></audio>
+<button id="fs" aria-label="Toggle fullscreen">
+  <svg class="ic-enter" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+  <svg class="ic-exit" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+</button>
+<button id="music" class="off" aria-label="Play background music">
+  <svg class="note" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
+</button>
+<div id="music-hint">Turn on music ♪</div>
+
+<div id="cue">scroll
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+</div>
+<div id="tag">Trinity Bible Church · 3D journey</div>
+<div id="spacer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var R=26; // planet radius
+  var canvas=document.getElementById('scene');
+  var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;
+
+  var scene=new THREE.Scene();
+  scene.fog=new THREE.Fog(0xeec0a0,90,360);
+  var camera=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,0.1,1000);
+
+  var hemiL=new THREE.HemisphereLight(0xffe3b0,0x46603f,1.05); scene.add(hemiL);
+  var sun=new THREE.DirectionalLight(0xffd9a8,1.4); sun.position.set(-50,46,30);
+  sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+  sun.shadow.camera.near=10; sun.shadow.camera.far=220;
+  sun.shadow.camera.left=-70; sun.shadow.camera.right=70; sun.shadow.camera.top=70; sun.shadow.camera.bottom=-70;
+  scene.add(sun);
+  var fill=new THREE.DirectionalLight(0xbfd4ff,0.22); fill.position.set(40,20,-30); scene.add(fill);
+
+  function mat(c,o){o=o||{};return new THREE.MeshStandardMaterial({color:c,flatShading:true,roughness:o.r==null?0.95:o.r,metalness:0,emissive:o.e==null?0x000000:o.e,emissiveIntensity:o.ei==null?1:o.ei,transparent:!!o.t,opacity:o.o==null?1:o.o});}
+  var grassMats=[],flowers=[];
+
+  /* soft glow sprite (faux-bloom, keeps it a single file) */
+  function glowTex(){var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d');
+    var g=x.createRadialGradient(64,64,0,64,64,64);g.addColorStop(0,'rgba(255,240,205,1)');g.addColorStop(.4,'rgba(255,220,150,.5)');g.addColorStop(1,'rgba(255,210,130,0)');
+    x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c);}
+  var GLOW=glowTex();
+  function glowSprite(scale,opacity){var s=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW,transparent:true,opacity:opacity==null?0.9:opacity,depthWrite:false,blending:THREE.AdditiveBlending}));s.scale.set(scale,scale,1);return s;}
+
+  /* ---- builders that return a group standing on +Y (placed onto the sphere later) ---- */
+  function tree(s){s=s||1;var g=new THREE.Group();
+    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.5*s,0.7*s,3.2*s,6),mat(0x7a5230));tr.position.y=1.6*s;tr.castShadow=true;g.add(tr);
+    var greens=[0x4f9a43,0x5cab4e,0x6fb85a];
+    for(var i=0;i<3;i++){var c=new THREE.Mesh(new THREE.ConeGeometry((3.0-i*0.7)*s,(3.2-i*0.5)*s,7),mat(greens[i]));c.position.y=(3.4+i*1.7)*s;c.castShadow=true;c.rotation.y=Math.random();g.add(c);grassMats.push(c.material);}
+    return g;}
+  function flower(c){var g=new THREE.Group();var st=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,1,5),mat(0x3f8a3a));st.position.y=0.5;g.add(st);var hd=new THREE.Mesh(new THREE.IcosahedronGeometry(0.34,0),mat(c,{e:c,ei:0.25}));hd.position.y=1.05;g.add(hd);g.scale.setScalar(0.001);flowers.push(g);return g;}
+  function rock(s){return new THREE.Mesh(new THREE.DodecahedronGeometry(s||1,0),mat(0x8d8f93,{r:1}));}
+  function figure(c){var g=new THREE.Group();var b=new THREE.Mesh(new THREE.ConeGeometry(0.7,2.4,7),mat(c));b.position.y=1.2;b.castShadow=true;g.add(b);var h=new THREE.Mesh(new THREE.SphereGeometry(0.45,10,10),mat(0xf0c9a0));h.position.y=2.7;h.castShadow=true;g.add(h);return g;}
+
+  var _Y=new THREE.Vector3(0,1,0),_q=new THREE.Quaternion();
+  function place(parent,obj,dir,radius){dir=dir.clone().normalize();obj.position.copy(dir.clone().multiplyScalar(radius));_q.setFromUnitVectors(_Y,dir);obj.quaternion.copy(_q);parent.add(obj);return obj;}
+  function randDir(sign,maxY){maxY=maxY==null?1:maxY;var v,n=0;do{var u=Math.random()*2-1,th=Math.random()*Math.PI*2,s=Math.sqrt(1-u*u);v=new THREE.Vector3(s*Math.cos(th),u,s*Math.sin(th));n++;}while(n<60 && ((sign>0? v.z<0.18 : v.z>-0.18) || v.y<-0.1 || v.y>maxY));return v;}
+
+  /* ---- the planet: two hemispheres that crack apart ---- */
+  // halfA = +Z hemisphere (us), halfB = -Z hemisphere (God's side)
+  function hemisphere(phiStart){
+    var geo=new THREE.SphereGeometry(R,30,20,phiStart,Math.PI);
+    var m=mat(0x6fae54); grassMats.push(m);
+    var mesh=new THREE.Mesh(geo,m); mesh.castShadow=true; mesh.receiveShadow=true;
+    var g=new THREE.Group(); g.add(mesh);
+    // glowing rift cap on the flat (z=0) face
+    var capMat=new THREE.MeshStandardMaterial({color:0x3a2a22,emissive:0xff7a3a,emissiveIntensity:0.0,roughness:0.7});
+    var cap=new THREE.Mesh(new THREE.CircleGeometry(R,40),capMat); g.add(cap); g.userData.capMat=capMat;
+    return g;
+  }
+  var halfA=hemisphere(0);        cap_face(halfA,-1); scene.add(halfA);   // +Z
+  var halfB=hemisphere(Math.PI);  cap_face(halfB, 1); scene.add(halfB);   // -Z
+  function cap_face(g,faceZ){ var cap=g.children[1]; cap.position.z=0; cap.rotation.y = faceZ<0? Math.PI:0; }
+
+  // greenery on each hemisphere
+  // trees & rocks stay on the slopes (maxY 0.6) so the summit stays clear for the people and the cross
+  for(var i=0;i<8;i++){place(halfA,tree(0.9+Math.random()*0.4),randDir(1,0.6),R-0.4);}
+  for(var i=0;i<9;i++){place(halfB,tree(0.9+Math.random()*0.4),randDir(-1,0.6),R-0.4);}
+  var fcol=[0xffd166,0xef8da0,0xf4f1ea,0xc89bf0];
+  for(var i=0;i<18;i++){place(halfA,flower(fcol[i%4]),randDir(1,0.8),R-0.2);}
+  for(var i=0;i<18;i++){place(halfB,flower(fcol[i%4]),randDir(-1,0.8),R-0.2);}
+  for(var i=0;i<4;i++){place(halfA,rock(0.8+Math.random()),randDir(1,0.55),R-0.3);}
+  for(var i=0;i<4;i++){place(halfB,rock(0.8+Math.random()),randDir(-1,0.55),R-0.3);}
+
+  // us — figures at the very top edge of halfA (the seam), so they sit beside God at the start
+  place(halfA,figure(0x6a7bd0),new THREE.Vector3(-0.13,0.965,0.22),R-0.1);
+  place(halfA,figure(0xcf7d6a),new THREE.Vector3(0.04,0.965,0.255),R-0.1);
+
+  // God's warm presence at the top edge of halfB — close to the people until sin separates them
+  var presence=new THREE.Group(); halfB.add(presence);
+  var presBaseDir=new THREE.Vector3(0,0.95,-0.24).normalize();
+  var orb=new THREE.Mesh(new THREE.SphereGeometry(1.7,18,18),new THREE.MeshStandardMaterial({color:0xffe6b0,emissive:0xffce82,emissiveIntensity:1.5,roughness:0.3}));
+  presence.add(orb);
+  var orbGlow=glowSprite(16,0.9); presence.add(orbGlow);
+  var glowLight=new THREE.PointLight(0xffcf8a,1.3,120); presence.add(glowLight);
+
+  /* ---- the cross that bridges the rift ---- */
+  var crossMat=new THREE.MeshStandardMaterial({color:0xfff0d2,emissive:0xffcf86,emissiveIntensity:1.7,roughness:0.4});
+  var bridge=new THREE.Group(); bridge.position.set(0,R*0.94,0); scene.add(bridge);
+  var plank=new THREE.Mesh(new THREE.BoxGeometry(3.6,0.6,1),crossMat); plank.castShadow=true; bridge.add(plank); // scaled along z
+  var crossUp=new THREE.Group(); bridge.add(crossUp);
+  var cv=new THREE.Mesh(new THREE.BoxGeometry(0.9,7,0.9),crossMat); cv.position.y=3.4; cv.castShadow=true; crossUp.add(cv);
+  var ch=new THREE.Mesh(new THREE.BoxGeometry(4.4,0.9,0.9),crossMat); ch.position.y=4.7; ch.castShadow=true; crossUp.add(ch);
+  var crossGlow=glowSprite(12,0.0); crossGlow.position.y=4; bridge.add(crossGlow);
+  var crossLight=new THREE.PointLight(0xffd89a,0,90); crossLight.position.set(0,R*0.94+4,0); scene.add(crossLight);
+
+  // glowing rift core light between the halves
+  var riftLight=new THREE.PointLight(0xff7a3a,0,60); scene.add(riftLight);
+
+  /* floating motes */
+  var moteN=reduce?0:150,motes=null,mv=[];
+  if(moteN){var pg=new THREE.BufferGeometry(),pos=new Float32Array(moteN*3);
+    for(var k=0;k<moteN;k++){pos[k*3]=(Math.random()-0.5)*180;pos[k*3+1]=(Math.random()-0.5)*150;pos[k*3+2]=(Math.random()-0.5)*180;mv.push(0.004+Math.random()*0.012);}
+    pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    motes=new THREE.Points(pg,new THREE.PointsMaterial({color:0xffe9c0,size:0.6,transparent:true,opacity:0.75,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(motes);}
+
+  /* ---- interpolation helpers ---- */
+  function fs(t,s){if(t<=s[0][0])return s[0][1];var n=s.length;if(t>=s[n-1][0])return s[n-1][1];
+    for(var i=1;i<n;i++){if(t<=s[i][0]){var a=s[i-1],b=s[i],u=(t-a[0])/(b[0]-a[0]);u=u*u*(3-2*u);return a[1]+(b[1]-a[1])*u;}}return s[n-1][1];}
+  var _c=new THREE.Color();
+  function ck(t,s){if(t<=s[0][0])return _c.copy(s[0][1]);var n=s.length;if(t>=s[n-1][0])return _c.copy(s[n-1][1]);
+    for(var i=1;i<n;i++){if(t<=s[i][0]){var a=s[i-1],b=s[i],u=(t-a[0])/(b[0]-a[0]);u=u*u*(3-2*u);return _c.copy(a[1]).lerp(b[1],u);}}return _c.copy(s[n-1][1]);}
+  function C(h){return new THREE.Color(h);}
+
+  var fogStops=[[0,C(0xeec0a0)],[0.25,C(0xe9b48f)],[0.47,C(0x5b6274)],[0.60,C(0x7d8088)],[0.72,C(0xf0c890)],[0.92,C(0xffe0b0)]];
+  var sunIntStops=[[0,1.5],[0.25,1.45],[0.47,0.5],[0.62,0.95],[0.74,1.5],[0.92,1.7]];
+  var hemiStops=[[0,1.15],[0.25,1.12],[0.47,0.45],[0.72,1.08],[0.92,1.25]];
+  var sunColStops=[[0,C(0xffd9a8)],[0.47,C(0x9fb0c8)],[0.72,C(0xffd29a)],[0.92,C(0xffe3b0)]];
+  var moodStops=[[0,0],[0.25,0],[0.47,0.55],[0.58,0.38],[0.70,0.04],[1,0]];
+  var greenC=C(0x6fae54),grayC=C(0x6a6a66),vividC=C(0x7cc95f);
+
+  /* camera orbit keyframes: angle (around Y), radius, height */
+  var angStops=[[0,0.55],[0.13,0.85],[0.25,1.15],[0.40,1.50],[0.55,1.57],[0.66,1.57],[0.80,2.0],[1,2.55]];
+  var radStops=[[0,104],[0.13,78],[0.25,72],[0.46,66],[0.66,64],[0.80,84],[1,98]];
+  var hgtStops=[[0,58],[0.13,32],[0.25,28],[0.46,26],[0.66,26],[0.80,34],[1,46]];
+  var lookYStops=[[0,4],[0.30,11],[0.46,16],[0.66,16],[0.80,12],[1,7]];
+
+  var curT=0,tgtT=0;
+  function scrollT(){var m=document.body.scrollHeight-innerHeight;return m>0?Math.min(1,Math.max(0,scrollY/m)):0;}
+  addEventListener('scroll',function(){tgtT=scrollT();},{passive:true});
+
+  var overlays=[].slice.call(document.querySelectorAll('.overlay'));
+  function sm(a,b,x){if(x<=a)return 0;if(x>=b)return 1;var t=(x-a)/(b-a);return t*t*(3-2*t);}
+  function updateOverlays(t){overlays.forEach(function(o){
+      var s=parseFloat(o.dataset.s),e=parseFloat(o.dataset.e),h=parseFloat(o.dataset.h);
+      var op=Math.max(0,Math.min(sm(s,s+h,t),1-sm(e-h,e,t)));o.style.opacity=op.toFixed(3);
+      if(o.id==='cta') o.style.pointerEvents=op>0.4?'auto':'none';});
+    document.getElementById('cue').style.opacity=t>0.04?0:0.85;}
+
+  addEventListener('resize',function(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));});
+
+  var clock=new THREE.Clock();
+  function tick(){
+    var dt=Math.min(clock.getDelta(),0.05),tm=clock.elapsedTime;
+    curT+=(tgtT-curT)*Math.min(1,dt*2.1); var t=curT;
+
+    var sinAmt=fs(t,[[0,0],[0.27,0],[0.46,1],[1,1]]);
+    var healAmt=fs(t,[[0,0],[0.60,0],[0.92,1]]);
+    var crossGrow=fs(t,[[0,0],[0.70,0],[0.80,1],[1,1]]);
+    var bloom=fs(t,[[0,0],[0.90,0],[0.99,1]]);
+
+    // the globe cracks apart
+    var gap=sinAmt*20;
+    halfA.position.z=gap/2; halfB.position.z=-gap/2;
+
+    // glowing rift: caps light up, core light glows
+    var riftGlow=sinAmt*(1-healAmt*0.75);
+    halfA.userData.capMat.emissiveIntensity=0.05+riftGlow*1.8;
+    halfB.userData.capMat.emissiveIntensity=0.05+riftGlow*1.8;
+    riftLight.position.set(0,R*0.2,0); riftLight.intensity=riftGlow*2.4;
+
+    // God's light draws close, recedes with sin, returns with grace
+    presence.position.copy(presBaseDir.clone().multiplyScalar(R+4+sinAmt*13*(1-healAmt)));
+    var pInt=fs(t,[[0,1.4],[0.27,1.4],[0.46,0.5],[0.60,1.1],[0.80,2.0],[0.92,2.2]]);
+    orb.material.emissiveIntensity=pInt; glowLight.intensity=0.6+pInt*0.7+Math.sin(tm*1.3)*0.15;
+    orb.scale.setScalar(1+Math.sin(tm*1.3)*0.06);
+    orbGlow.material.opacity=0.45+pInt*0.22; orbGlow.scale.setScalar(8+pInt*2.2);
+
+    // grass heals: green -> gray (sin) -> vivid (new creation)
+    var g1=_c.copy(greenC).lerp(grayC,sinAmt*(1-healAmt*0.9));var gc=g1.clone().lerp(vividC,healAmt*0.55);
+    for(var gi=0;gi<grassMats.length;gi++){grassMats[gi].color.copy(gc);}
+
+    // the cross bridges the gap, then glows
+    var span=(gap+11);
+    plank.scale.z=Math.max(0.001,crossGrow*span);
+    crossUp.scale.set(Math.max(0.001,crossGrow),Math.max(0.001,crossGrow),Math.max(0.001,crossGrow));
+    bridge.visible=crossGrow>0.01;
+    crossLight.intensity=crossGrow*2.4;
+    crossGlow.material.opacity=crossGrow*0.8; crossGlow.scale.setScalar(9+crossGrow*4);
+
+    // new creation blooms
+    for(var fi=0;fi<flowers.length;fi++){flowers[fi].scale.setScalar(Math.max(0.001,bloom));}
+
+    // mood / light / fog
+    scene.fog.color.copy(ck(t,fogStops));
+    sun.intensity=fs(t,sunIntStops); sun.color.copy(ck(t,sunColStops)); hemiL.intensity=fs(t,hemiStops);
+    document.getElementById('mood').style.opacity=fs(t,moodStops).toFixed(3);
+
+    // orbiting camera
+    var ang=fs(t,angStops),rad=fs(t,radStops),hy=fs(t,hgtStops);
+    camera.position.set(Math.sin(ang)*rad+Math.sin(tm*0.2)*0.6, hy+Math.sin(tm*0.35)*0.5, Math.cos(ang)*rad+Math.cos(tm*0.2)*0.6);
+    camera.lookAt(0,fs(t,lookYStops)+Math.sin(tm*0.4)*0.3,0);
+
+    if(motes){var mp=motes.geometry.attributes.position.array;for(var m2=0;m2<moteN;m2++){mp[m2*3+1]+=mv[m2];if(mp[m2*3+1]>80)mp[m2*3+1]=-70;}motes.geometry.attributes.position.needsUpdate=true;}
+
+    updateOverlays(t);
+    renderer.render(scene,camera);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(function(){tick();var l=document.getElementById('loader');l.classList.add('hide');setTimeout(function(){l.style.display='none';},800);});
+})();
+</script>
+
+<script>
+/* gentle looping background music — uses music.mp3 in this folder */
+(function(){
+  var bgm=document.getElementById('bgm'),btn=document.getElementById('music'),hint=document.getElementById('music-hint');
+  var TARGET=0.55,fadeTimer=null,playing=false;
+  bgm.src='music.mp3'; bgm.volume=0;
+  function fadeTo(target){clearInterval(fadeTimer);fadeTimer=setInterval(function(){var d=target-bgm.volume;
+    if(Math.abs(d)<0.02){bgm.volume=Math.max(0,Math.min(1,target));clearInterval(fadeTimer);if(target===0)bgm.pause();return;}
+    bgm.volume=Math.max(0,Math.min(1,bgm.volume+d*0.07));},40);}
+  function toggle(){if(!playing){var p=bgm.play();if(p&&p.catch)p.catch(function(){hint.textContent='Add music.mp3 to the folder';hint.classList.add('show');});
+      playing=true;btn.classList.add('on');btn.classList.remove('off');fadeTo(TARGET);hint.classList.remove('show');}
+    else{playing=false;btn.classList.remove('on');btn.classList.add('off');fadeTo(0);}}
+  btn.addEventListener('click',toggle);
+  setTimeout(function(){if(!playing)hint.classList.add('show');},1800);   // stays up (gently bobbing) until music is turned on
+
+  /* fullscreen toggle */
+  var fsBtn=document.getElementById('fs');
+  function inFS(){return document.fullscreenElement||document.webkitFullscreenElement;}
+  fsBtn.addEventListener('click',function(){
+    var el=document.documentElement;
+    if(!inFS()){(el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el);}
+    else{(document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document);}
+  });
+  function fsSync(){fsBtn.classList.toggle('on',!!inFS());}
+  document.addEventListener('fullscreenchange',fsSync);
+  document.addEventListener('webkitfullscreenchange',fsSync);
+})();
+</script>
+</body>
+</html>
