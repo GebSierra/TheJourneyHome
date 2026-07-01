@@ -171,6 +171,20 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   function flower(c){var g=new THREE.Group();var st=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,1,5),mat(0x3f8a3a));st.position.y=0.5;g.add(st);var hd=new THREE.Mesh(new THREE.IcosahedronGeometry(0.34,0),mat(c,{e:c,ei:0.25}));hd.position.y=1.05;g.add(hd);g.scale.setScalar(0.001);flowers.push(g);return g;}
   function rock(s){return new THREE.Mesh(new THREE.DodecahedronGeometry(s||1,0),mat(0x8d8f93,{r:1}));}
   function figure(c){var g=new THREE.Group();var b=new THREE.Mesh(new THREE.ConeGeometry(0.7,2.4,7),mat(c));b.position.y=1.2;b.castShadow=true;g.add(b);var h=new THREE.Mesh(new THREE.SphereGeometry(0.45,10,10),mat(0xf0c9a0));h.position.y=2.7;h.castShadow=true;g.add(h);return g;}
+  /* rounded (deciduous) tree — overlapping low-poly canopy blobs on a trunk */
+  function roundTree(s){s=s||1;var g=new THREE.Group();
+    var tr=new THREE.Mesh(new THREE.CylinderGeometry(0.45*s,0.62*s,3.0*s,6),mat(0x7a5230));tr.position.y=1.5*s;tr.castShadow=true;g.add(tr);
+    var greens=[0x4f9a43,0x5cab4e,0x6fb85a,0x57a64a];
+    var blobs=[[0,4.3,0,2.3],[1.4,3.7,0.3,1.6],[-1.2,3.8,-0.5,1.6],[0.2,5.4,0.2,1.6]];
+    for(var i=0;i<blobs.length;i++){var b=blobs[i];var c=new THREE.Mesh(new THREE.IcosahedronGeometry(b[3]*s,0),mat(greens[i%4]));
+      c.position.set(b[0]*s,b[1]*s,b[2]*s);c.rotation.set(Math.random(),Math.random(),Math.random());c.castShadow=true;g.add(c);grassMats.push(c.material);}
+    return g;}
+  /* low leafy bush — a few small canopy blobs near the ground */
+  function bush(s){s=s||1;var g=new THREE.Group();
+    var blobs=[[0,0.7,0,1.05],[0.85,0.55,0.25,0.72],[-0.75,0.6,-0.3,0.72],[0.1,1.15,-0.1,0.6]];
+    for(var i=0;i<blobs.length;i++){var b=blobs[i];var c=new THREE.Mesh(new THREE.IcosahedronGeometry(b[3]*s,0),mat(0x57a64a));
+      c.position.set(b[0]*s,b[1]*s,b[2]*s);c.rotation.set(Math.random(),Math.random(),Math.random());c.castShadow=true;g.add(c);grassMats.push(c.material);}
+    return g;}
 
   var _Y=new THREE.Vector3(0,1,0),_q=new THREE.Quaternion();
   function place(parent,obj,dir,radius){dir=dir.clone().normalize();obj.position.copy(dir.clone().multiplyScalar(radius));_q.setFromUnitVectors(_Y,dir);obj.quaternion.copy(_q);parent.add(obj);return obj;}
@@ -194,8 +208,14 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 
   // greenery on each hemisphere
   // trees & rocks stay on the slopes (maxY 0.6) so the summit stays clear for the people and the cross
-  for(var i=0;i<8;i++){place(halfA,tree(0.9+Math.random()*0.4),randDir(1,0.6),R-0.4);}
-  for(var i=0;i<9;i++){place(halfB,tree(0.9+Math.random()*0.4),randDir(-1,0.6),R-0.4);}
+  // a mix of evergreens, rounded (deciduous) trees, and low bushes — all kept on the slopes
+  // (maxY ~0.6) so the summit stays clear for the people, God, and the cross
+  for(var i=0;i<5;i++){place(halfA,tree(0.9+Math.random()*0.4),randDir(1,0.6),R-0.4);}
+  for(var i=0;i<5;i++){place(halfB,tree(0.9+Math.random()*0.4),randDir(-1,0.6),R-0.4);}
+  for(var i=0;i<4;i++){place(halfA,roundTree(0.85+Math.random()*0.4),randDir(1,0.58),R-0.4);}
+  for(var i=0;i<4;i++){place(halfB,roundTree(0.85+Math.random()*0.4),randDir(-1,0.58),R-0.4);}
+  for(var i=0;i<5;i++){place(halfA,bush(0.8+Math.random()*0.5),randDir(1,0.62),R-0.2);}
+  for(var i=0;i<5;i++){place(halfB,bush(0.8+Math.random()*0.5),randDir(-1,0.62),R-0.2);}
   var fcol=[0xffd166,0xef8da0,0xf4f1ea,0xc89bf0];
   for(var i=0;i<18;i++){place(halfA,flower(fcol[i%4]),randDir(1,0.8),R-0.2);}
   for(var i=0;i<18;i++){place(halfB,flower(fcol[i%4]),randDir(-1,0.8),R-0.2);}
