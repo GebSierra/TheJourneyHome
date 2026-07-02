@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>He Gave His Life — a journey (globe) | Trinity Bible Church</title>
+<title>He Gave His Life — a journey | Trinity Bible Church</title>
+<meta name="description" content="A short, scroll-through journey of the gospel: the world made good, broken by sin, and restored through the cross. From Trinity Bible Church." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -14,9 +15,10 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   background:linear-gradient(180deg,#16244c 0%,#3f4f86 24%,#8a7fae 48%,#e7a98c 74%,#ffd9a0 100%);}
 #scene{position:fixed;inset:0;z-index:1;display:block}
 #mood{position:fixed;inset:0;z-index:2;background:#0a1024;opacity:0;pointer-events:none;transition:opacity .12s linear}
-#spacer{position:relative;z-index:3;height:2200vh;pointer-events:none}
+#spacer{position:relative;z-index:3;height:2500vh;pointer-events:none}
 
-.overlay{position:fixed;left:0;right:0;top:50%;transform:translateY(-50%);z-index:4;display:flex;justify-content:center;align-items:center;text-align:center;padding:0 6vw;pointer-events:none;opacity:0;will-change:opacity}
+.overlay{position:fixed;inset:0;z-index:4;display:flex;justify-content:center;align-items:flex-end;text-align:center;padding:0 6vw 9vh;pointer-events:none;opacity:0;will-change:opacity}
+.overlay#cta{align-items:center;padding-bottom:0}
 .panel{position:relative;max-width:680px;padding:2.1rem 2.6rem}
 .panel::before{content:"";position:absolute;inset:-14px -8px;z-index:-1;border-radius:32px;
   background:rgba(8,10,22,.36);
@@ -27,6 +29,18 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 .overlay h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(2.1rem,6vw,4.2rem);line-height:1.08;letter-spacing:-.02em;text-shadow:0 3px 26px rgba(0,0,0,.7)}
 .overlay p{font-size:clamp(1.05rem,2.3vw,1.34rem);max-width:600px;margin:1.05rem auto 0;color:#fff7ec;line-height:1.6;text-shadow:0 2px 20px rgba(0,0,0,.8)}
 .overlay .ref{display:inline-block;margin-top:1rem;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:#ffe7bd;text-shadow:0 2px 14px rgba(0,0,0,.75)}
+
+/* multiple tract-style boxes stacked within a single beat */
+.panel-stack{display:flex;flex-direction:column;align-items:center;gap:1rem;max-width:680px}
+.panel-stack .panel{max-width:100%}
+.panel.sm{padding:1.3rem 1.8rem}
+.panel.sm p{font-size:clamp(.92rem,2vw,1.12rem);margin-top:.3rem}
+.panel.sm .kicker{margin-bottom:.5rem}
+.hl-gold{color:#f7cf4a;font-weight:700}
+.hl-red{color:#ef6a52;font-weight:700}
+.hl-maroon{color:#e0574c;font-weight:700}
+.hl-green{color:#6fcf8e;font-weight:700}
+.cta-note{margin-top:1rem;font-size:.85rem;opacity:.85}
 
 #cue{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:5;color:rgba(255,247,236,.85);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.5);animation:bob 2.4s ease-in-out infinite}
 #cue svg{display:block;margin:.5rem auto 0}
@@ -67,48 +81,145 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 <div id="mood"></div>
 <div id="hud">He Gave His Life · a journey</div>
 
-<div class="overlay" data-s="0.00" data-e="0.10" data-h="0.03">
-  <div class="panel"><div class="kicker">In the beginning</div><h1>God made the world good.</h1></div>
+<div class="overlay" data-s="0.035" data-e="0.180" data-h="0.030">
+  <div class="panel-stack">
+    <div class="panel">
+      <div class="kicker">In the beginning</div>
+      <h1>God made the world <span class="hl-gold">good</span>.</h1>
+      <p>There was <span class="hl-gold">no distance</span> between God and man because there was no sin in the world! In fact, there was no sin in us! And <span class="hl-gold">God walked with people.</span></p>
+    </div>
+    <div class="panel sm">
+      <p>"You knitted me together in my mother's womb…I am fearfully and wonderfully made."</p>
+      <span class="ref">Psalm 139:13-14</span>
+    </div>
+    <div class="panel sm">
+      <p>"God created man in his own image, in the image of God he created him; male and female he created them."</p>
+      <span class="ref">Genesis 1:27</span>
+    </div>
+  </div>
 </div>
-<div class="overlay" data-s="0.10" data-e="0.25" data-h="0.038">
-  <div class="panel"><p>There was no distance between God and man, because there was no sin in the world. And God walked with people.</p><span class="ref">Genesis 1:27 · Psalm 139:14</span></div>
+<div class="overlay" data-s="0.192" data-e="0.288" data-h="0.024">
+  <div class="panel-stack">
+    <div class="panel">
+      <div class="kicker">But something changed</div>
+      <h1>"I'm a good person!"</h1>
+      <p>We may think of ourselves as a "good" person, but the Bible says <span class="hl-red">your sins</span> "have made a separation between you and your God."</p>
+      <span class="ref">Isaiah 59:2</span>
+    </div>
+    <div class="panel sm">
+      <p>Although God made the world perfect — mankind chose <span class="hl-red">sin.</span></p>
+    </div>
+  </div>
 </div>
-<div class="overlay" data-s="0.255" data-e="0.35" data-h="0.032">
-  <div class="panel"><div class="kicker">But something changed</div><h1>"I'm a good person."</h1><p>But the Bible says your sins "have made a separation between you and your God."</p><span class="ref">Isaiah 59:2</span></div>
+<div class="overlay" data-s="0.300" data-e="0.390" data-h="0.024">
+  <div class="panel-stack">
+    <div class="panel">
+      <div class="kicker">The problem</div>
+      <p>The problem is we're all sinners! We are born "dead in our … <span class="hl-red">sins</span> … separated from Christ … having no hope and without God in the world"</p>
+      <span class="ref">Ephesians 2:1, 12</span>
+    </div>
+    <div class="panel sm">
+      <p>God is not a cosmic Santa Claus who chuckles at the "naughty" things we do. He is the <em>holy</em> judge of the earth. He must punish <span class="hl-red">evil!</span></p>
+    </div>
+  </div>
 </div>
-<div class="overlay" data-s="0.355" data-e="0.45" data-h="0.032">
-  <div class="panel"><div class="kicker">The problem</div><h1>Mankind chose sin.</h1><p>We are all sinners — born "dead in our sins, separated from Christ, having no hope and without God in the world."</p><span class="ref">Ephesians 2:1, 12</span></div>
+<div class="overlay" data-s="0.402" data-e="0.464" data-h="0.020">
+  <div class="panel-stack">
+    <div class="panel">
+      <div class="kicker">We try to fix it ourselves</div>
+      <p>Many of us try to deal with <span class="hl-red">sin</span> on our own. We change our habits or try to be good because we hope that could take away our <span class="hl-red">guilt, anxiety, and fear.</span></p>
+    </div>
+    <div class="panel sm">
+      <div class="steps"><span>Being nice</span><span>Saying Prayers</span><span>Attending church</span></div>
+    </div>
+  </div>
 </div>
-<div class="overlay" data-s="0.455" data-e="0.53" data-h="0.032">
-  <div class="panel"><p>God is not a distant idea who shrugs at wrong. He is the holy judge of the earth, and he must punish evil.</p></div>
+<div class="overlay" data-s="0.476" data-e="0.538" data-h="0.020">
+  <div class="panel-stack">
+    <div class="panel">
+      <p>But God's word says there is <em>nothing we</em> could do to bridge this gap between God and man.</p>
+    </div>
+    <div class="panel sm">
+      <p>"For all have <span class="hl-red">sinned</span> and fallen short of the glory of God"</p>
+      <span class="ref">Romans 3:23</span>
+    </div>
+  </div>
 </div>
-<div class="overlay" data-s="0.535" data-e="0.625" data-h="0.032">
-  <div class="panel"><div class="kicker">We can't fix it ourselves</div><p>We try — saying prayers, being nice, attending church. But nothing we do can bridge this gap. "For all have sinned and fall short of the glory of God."</p><span class="ref">Romans 3:23</span></div>
+<div class="overlay" data-s="0.550" data-e="0.610" data-h="0.020">
+  <div class="panel-stack">
+    <div class="panel">
+      <div class="kicker">But God</div>
+      <h1>He demonstrates his <span class="hl-maroon">love</span> for us in this…</h1>
+    </div>
+    <div class="panel sm">
+      <p>While we were still sinners Christ died for us!</p>
+      <span class="ref">Romans 5:8</span>
+    </div>
+  </div>
 </div>
-<div class="overlay" data-s="0.63" data-e="0.715" data-h="0.032">
-  <div class="panel"><div class="kicker">But God</div><h1>He demonstrates his love.</h1><p>"While we were still sinners, Christ died for us."</p><span class="ref">Romans 5:8</span></div>
+<div class="overlay" data-s="0.622" data-e="0.700" data-h="0.024">
+  <div class="panel-stack">
+    <div class="panel">
+      <div class="kicker">The good news</div>
+      <h1>Jesus died on the <span class="hl-maroon">cross</span> to take the punishment that we deserved!</h1>
+    </div>
+    <div class="panel sm">
+      <p>3 days later he rose from the dead! This proved God accepted <span class="hl-maroon">his sacrifice.</span> Now anyone who places their trust in him "shall be saved"</p>
+      <span class="ref">Romans 10:9</span>
+    </div>
+  </div>
 </div>
-<div class="overlay" data-s="0.72" data-e="0.81" data-h="0.032">
-  <div class="panel"><div class="kicker">The good news</div><h1>He gave his life.</h1><p>Jesus died on the cross to take the punishment we deserved. Three days later he rose from the dead — proof that God accepted his sacrifice. Anyone who trusts in him "shall be saved."</p><span class="ref">Romans 10:9</span></div>
+<div class="overlay" data-s="0.712" data-e="0.758" data-h="0.020">
+  <div class="panel-stack">
+    <div class="panel">
+      <div class="kicker">A free gift</div>
+      <p>The Bible says this <span class="hl-green">free gift</span> of God comes through repentance and faith. "For by <span class="hl-green">grace</span> you have been saved through faith, and this is not your own doing — it is the <span class="hl-green">gift</span> of God"</p>
+      <span class="ref">Ephesians 2:8</span>
+    </div>
+    <div class="panel sm">
+      <p>Repentance is turning away from your sin. Faith is trusting in Jesus's sacrifice alone for the forgiveness of your sins.</p>
+    </div>
+  </div>
 </div>
-<div class="overlay" data-s="0.815" data-e="0.885" data-h="0.032">
-  <div class="panel"><div class="kicker">A free gift</div><p>"By grace you have been saved through faith. It is the gift of God." Repentance is turning from your sin. Faith is trusting in Jesus's sacrifice alone for the forgiveness of your sins.</p><span class="ref">Ephesians 2:8</span></div>
-</div>
-<div class="overlay" data-s="0.89" data-e="0.945" data-h="0.03">
-  <div class="panel"><h1>Will you receive<br>this free gift?</h1><p>Will you trust in Christ alone for the forgiveness of your sins?</p></div>
-</div>
-<div class="overlay" data-s="0.95" data-e="0.985" data-h="0.022">
-  <div class="panel"><div class="kicker">A new creation</div><p>When God forgives you, he makes you new and his Spirit lives in you. One day Jesus will return and make a new heavens and a new earth, and all who trust in him will walk with God forever.</p><span class="ref">2 Corinthians 5:17 · Revelation 21:3–4</span></div>
-</div>
-<div class="overlay" id="cta" data-s="0.985" data-e="1.01" data-h="0.015">
+<div class="overlay" data-s="0.768" data-e="0.800" data-h="0.014">
   <div class="panel">
-    <div class="kicker">Where to go from here</div>
-    <h1 style="font-size:clamp(1.8rem,5vw,3rem)">Take a next step.</h1>
-    <div class="steps"><span>Read the Bible</span><span>Pray and obey</span><span>Join a local church</span></div>
+    <h1>Will you receive this <span class="hl-green">free gift?</span></h1>
+    <p>Will you trust in Christ alone for the <span class="hl-green">forgiveness</span> of your sins?</p>
+  </div>
+</div>
+<div class="overlay" data-s="0.810" data-e="0.839" data-h="0.013">
+  <div class="panel-stack">
+    <div class="panel">
+      <div class="kicker">A new creation</div>
+      <p>When God <span class="hl-green">forgives</span> a person, he becomes a <span class="hl-green">"new creation"</span> and God's Holy Spirit lives inside of him!</p>
+      <span class="ref">2 Corinthians 5:17</span>
+    </div>
+    <div class="panel sm">
+      <p>If God has saved you, your <span class="hl-green">life</span> will never be the same. You won't be sinless, but you will sin less! You won't be perfect, but all your sins have been perfectly <span class="hl-green">forgiven</span>, and now you can walk in fellowship with God.</p>
+    </div>
+  </div>
+</div>
+<div class="overlay" data-s="0.849" data-e="0.874" data-h="0.011">
+  <div class="panel-stack">
+    <div class="panel sm">
+      <p>Not only can he make you <span class="hl-gold">new</span>, but he is going to remake the entire world.</p>
+    </div>
+    <div class="panel">
+      <p>One day, Jesus will return and God will create <span class="hl-gold">a new heavens</span> and <span class="hl-gold">a new earth.</span> Only those who have put their trust in Christ will walk with God in <span class="hl-gold">eternal life</span> forever.</p>
+      <span class="ref">Revelation 21:3-4</span>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="cta" data-s="0.920" data-e="1.15" data-h="0.014">
+  <div class="panel">
+    <div class="kicker">Ways to grow with God</div>
+    <div class="steps"><span>Read the Bible</span><span>Pray and Obey</span><span>Join a local church</span></div>
+    <p style="margin-top:1.1rem">These things do not save you, but they help you grow.</p>
     <div style="margin-top:1.3rem">
       <a class="btn" href="https://www.mytrinitybible.com/contact" target="_blank" rel="noopener">Reach out to us</a>
       <a class="btn ghost" href="https://hegavehis.life" target="_blank" rel="noopener">More resources</a>
     </div>
+    <p class="cta-note">Go to <strong>HeGaveHis.Life</strong> for additional resources, or help finding a local church.</p>
   </div>
 </div>
 
@@ -275,8 +386,44 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   var hgtStops=[[0,58],[0.13,32],[0.25,28],[0.46,26],[0.66,26],[0.80,34],[1,46]];
   var lookYStops=[[0,4],[0.30,11],[0.46,16],[0.66,16],[0.80,12],[1,7]];
 
+  /* Physical-scroll-to-story-time remap: stretches the gaps between beats (and the
+     pre-roll before the first beat) into much more scroll distance, while leaving the
+     beats' own reading pace untouched. Segments alternate: content (weight 1, normal
+     pace) and gap (weight GAP_W, slow pace = more scrolling per unit of story-time).
+     Story-time itself (fed to curT/fs()/ck()/overlays) is completely unchanged. */
+  var GAP_W=3, PREROLL_W=1;
+  var TIME_SEGMENTS=[
+    [0.000,0.035,PREROLL_W],
+    [0.035,0.180,1],[0.180,0.192,GAP_W],
+    [0.192,0.288,1],[0.288,0.300,GAP_W],
+    [0.300,0.390,1],[0.390,0.402,GAP_W],
+    [0.402,0.464,1],[0.464,0.476,GAP_W],
+    [0.476,0.538,1],[0.538,0.550,GAP_W],
+    [0.550,0.610,1],[0.610,0.622,GAP_W],
+    [0.622,0.700,1],[0.700,0.712,GAP_W],
+    [0.712,0.758,1],[0.758,0.768,GAP_W],
+    [0.768,0.800,1],[0.800,0.810,GAP_W],
+    [0.810,0.839,1],[0.839,0.849,GAP_W],
+    [0.849,0.874,1],[0.874,0.920,GAP_W],
+    [0.920,1.000,1]
+  ];
+  var REMAP=(function(){
+    var totalW=0; TIME_SEGMENTS.forEach(function(s){totalW+=(s[1]-s[0])*s[2];});
+    var pts=[[0,0]],acc=0;
+    TIME_SEGMENTS.forEach(function(s){acc+=(s[1]-s[0])*s[2];pts.push([acc/totalW,s[1]]);});
+    return pts;
+  })();
+  function storyTFromRaw(rawT){
+    if(rawT<=0)return 0; if(rawT>=1)return 1;
+    for(var i=1;i<REMAP.length;i++){if(rawT<=REMAP[i][0]){
+      var a=REMAP[i-1],b=REMAP[i],u=(b[0]-a[0])>0?(rawT-a[0])/(b[0]-a[0]):0;
+      return a[1]+(b[1]-a[1])*u;
+    }}
+    return 1;
+  }
+
   var curT=0,tgtT=0;
-  function scrollT(){var m=document.body.scrollHeight-innerHeight;return m>0?Math.min(1,Math.max(0,scrollY/m)):0;}
+  function scrollT(){var m=document.body.scrollHeight-innerHeight;var raw=m>0?Math.min(1,Math.max(0,scrollY/m)):0;return storyTFromRaw(raw);}
   addEventListener('scroll',function(){tgtT=scrollT();},{passive:true});
 
   var overlays=[].slice.call(document.querySelectorAll('.overlay'));
@@ -294,10 +441,10 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     var dt=Math.min(clock.getDelta(),0.05),tm=clock.elapsedTime;
     curT+=(tgtT-curT)*Math.min(1,dt*2.1); var t=curT;
 
-    var sinAmt=fs(t,[[0,0],[0.27,0],[0.46,1],[1,1]]);
-    var healAmt=fs(t,[[0,0],[0.60,0],[0.92,1]]);
-    var crossGrow=fs(t,[[0,0],[0.70,0],[0.80,1],[1,1]]);
-    var bloom=fs(t,[[0,0],[0.90,0],[0.99,1]]);
+    var sinAmt=fs(t,[[0,0],[0.19,0],[0.39,1],[1,1]]);
+    var healAmt=fs(t,[[0,0],[0.55,0],[0.80,1]]);
+    var crossGrow=fs(t,[[0,0],[0.622,0],[0.700,1],[1,1]]);
+    var bloom=fs(t,[[0,0],[0.810,0],[0.88,1]]);
 
     // the globe cracks apart
     var gap=sinAmt*20;
