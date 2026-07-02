@@ -19,28 +19,41 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 
 .overlay{position:fixed;inset:0;z-index:4;display:flex;justify-content:center;align-items:flex-end;text-align:center;padding:0 6vw 9vh;pointer-events:none;opacity:0;will-change:opacity}
 .overlay#cta{align-items:center;padding-bottom:0}
-.panel{position:relative;max-width:680px;padding:2.1rem 2.6rem}
-.panel::before{content:"";position:absolute;inset:-14px -8px;z-index:-1;border-radius:32px;
-  background:rgba(8,10,22,.36);
+.panel{position:relative;max-width:600px;padding:1.6rem 2rem}
+.panel::before{content:"";position:absolute;inset:-10px -8px;z-index:-1;border-radius:28px;
+  background:rgba(8,10,22,.4);
   -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
   -webkit-mask:radial-gradient(120% 120% at 50% 50%, #000 50%, transparent 100%);
   mask:radial-gradient(120% 120% at 50% 50%, #000 50%, transparent 100%);}
-.kicker{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:#ffe6c2;font-weight:600;margin-bottom:1rem;text-shadow:0 2px 16px rgba(0,0,0,.7)}
-.overlay h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(2.1rem,6vw,4.2rem);line-height:1.08;letter-spacing:-.02em;text-shadow:0 3px 26px rgba(0,0,0,.7)}
-.overlay p{font-size:clamp(1.05rem,2.3vw,1.34rem);max-width:600px;margin:1.05rem auto 0;color:#fff7ec;line-height:1.6;text-shadow:0 2px 20px rgba(0,0,0,.8)}
-.overlay .ref{display:inline-block;margin-top:1rem;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:#ffe7bd;text-shadow:0 2px 14px rgba(0,0,0,.75)}
+.kicker{font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:#ffe6c2;font-weight:600;margin-bottom:.8rem;text-shadow:0 2px 16px rgba(0,0,0,.7)}
+.overlay h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.7rem,4.6vw,3.2rem);line-height:1.1;letter-spacing:-.02em;text-shadow:0 3px 26px rgba(0,0,0,.7)}
+.overlay p{font-size:clamp(.92rem,1.9vw,1.12rem);max-width:540px;margin:.85rem auto 0;color:#fff7ec;line-height:1.55;text-shadow:0 2px 20px rgba(0,0,0,.8)}
+.overlay .ref{display:inline-block;margin-top:.8rem;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#ffe7bd;text-shadow:0 2px 14px rgba(0,0,0,.75)}
 
 /* multiple tract-style boxes stacked within a single beat */
-.panel-stack{display:flex;flex-direction:column;align-items:center;gap:1rem;max-width:680px}
+.panel-stack{display:flex;flex-direction:column;align-items:center;gap:3rem;max-width:600px}
 .panel-stack .panel{max-width:100%}
-.panel.sm{padding:1.3rem 1.8rem}
-.panel.sm p{font-size:clamp(.92rem,2vw,1.12rem);margin-top:.3rem}
-.panel.sm .kicker{margin-bottom:.5rem}
+.panel.sm{padding:1rem 1.4rem}
+.panel.sm p{font-size:clamp(.82rem,1.6vw,.96rem);margin-top:.25rem}
+.panel.sm .kicker{margin-bottom:.4rem}
 .hl-gold{color:#f7cf4a;font-weight:700}
 .hl-red{color:#ef6a52;font-weight:700}
 .hl-maroon{color:#e0574c;font-weight:700}
 .hl-green{color:#6fcf8e;font-weight:700}
 .cta-note{margin-top:1rem;font-size:.85rem;opacity:.85}
+
+@media (max-width:520px){
+  .panel{padding:1.2rem 1.3rem}
+  .panel.sm{padding:.8rem 1rem}
+  .panel-stack{gap:2rem}
+  .overlay{padding-bottom:6vh}
+}
+
+/* staggered reveal: panels rise in, then their lines fade in sequence (delays set in JS) */
+.overlay .panel{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.overlay .panel>*{opacity:0;transition:opacity .55s ease}
+.overlay.reveal .panel{opacity:1;transform:none}
+.overlay.reveal .panel>*{opacity:1}
 
 #cue{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:5;color:rgba(255,247,236,.85);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.5);animation:bob 2.4s ease-in-out infinite}
 #cue svg{display:block;margin:.5rem auto 0}
@@ -71,8 +84,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 
 #loader{position:fixed;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;background:#16244c;color:#ffe6c2;font-size:.8rem;letter-spacing:.25em;text-transform:uppercase;transition:opacity .8s ease}
 #loader.hide{opacity:0;pointer-events:none}
-#tag{position:fixed;left:14px;bottom:12px;z-index:5;font-size:.6rem;letter-spacing:.12em;color:rgba(255,247,236,.55);text-transform:uppercase}
-@media (prefers-reduced-motion: reduce){#cue{animation:none}}
+@media (prefers-reduced-motion: reduce){#cue{animation:none}.overlay .panel,.overlay .panel>*{opacity:1;transform:none;transition:none}}
 </style>
 </head>
 <body>
@@ -220,6 +232,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
       <a class="btn ghost" href="https://hegavehis.life" target="_blank" rel="noopener">More resources</a>
     </div>
     <p class="cta-note">Go to <strong>HeGaveHis.Life</strong> for additional resources, or help finding a local church.</p>
+    <p class="cta-note" style="opacity:.55;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase">Trinity Bible Church · 3D journey</p>
   </div>
 </div>
 
@@ -236,7 +249,6 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 <div id="cue">scroll
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
 </div>
-<div id="tag">Trinity Bible Church · 3D journey</div>
 <div id="spacer"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -264,7 +276,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   var fill=new THREE.DirectionalLight(0xbfd4ff,0.22); fill.position.set(40,20,-30); scene.add(fill);
 
   function mat(c,o){o=o||{};return new THREE.MeshStandardMaterial({color:c,flatShading:true,roughness:o.r==null?0.95:o.r,metalness:0,emissive:o.e==null?0x000000:o.e,emissiveIntensity:o.ei==null?1:o.ei,transparent:!!o.t,opacity:o.o==null?1:o.o});}
-  var grassMats=[],flowers=[];
+  var grassMats=[],flowers=[],animals=[],cloudMats=[];
 
   /* soft glow sprite (faux-bloom, keeps it a single file) */
   function glowTex(){var c=document.createElement('canvas');c.width=c.height=128;var x=c.getContext('2d');
@@ -279,7 +291,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     var greens=[0x4f9a43,0x5cab4e,0x6fb85a];
     for(var i=0;i<3;i++){var c=new THREE.Mesh(new THREE.ConeGeometry((3.0-i*0.7)*s,(3.2-i*0.5)*s,7),mat(greens[i]));c.position.y=(3.4+i*1.7)*s;c.castShadow=true;c.rotation.y=Math.random();g.add(c);grassMats.push(c.material);}
     return g;}
-  function flower(c){var g=new THREE.Group();var st=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,1,5),mat(0x3f8a3a));st.position.y=0.5;g.add(st);var hd=new THREE.Mesh(new THREE.IcosahedronGeometry(0.34,0),mat(c,{e:c,ei:0.25}));hd.position.y=1.05;g.add(hd);g.scale.setScalar(0.001);flowers.push(g);return g;}
+  function flower(c){var g=new THREE.Group();var st=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,1,5),mat(0x3f8a3a));st.position.y=0.5;g.add(st);var hd=new THREE.Mesh(new THREE.IcosahedronGeometry(0.34,0),mat(c,{e:c,ei:0.25}));hd.position.y=1.05;g.add(hd);g.scale.setScalar(0.001);g.userData.off=Math.random();flowers.push(g);return g;}
   function rock(s){return new THREE.Mesh(new THREE.DodecahedronGeometry(s||1,0),mat(0x8d8f93,{r:1}));}
   function figure(c){var g=new THREE.Group();var b=new THREE.Mesh(new THREE.ConeGeometry(0.7,2.4,7),mat(c));b.position.y=1.2;b.castShadow=true;g.add(b);var h=new THREE.Mesh(new THREE.SphereGeometry(0.45,10,10),mat(0xf0c9a0));h.position.y=2.7;h.castShadow=true;g.add(h);return g;}
   /* rounded (deciduous) tree — overlapping low-poly canopy blobs on a trunk */
@@ -295,6 +307,27 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     var blobs=[[0,0.7,0,1.05],[0.85,0.55,0.25,0.72],[-0.75,0.6,-0.3,0.72],[0.1,1.15,-0.1,0.6]];
     for(var i=0;i<blobs.length;i++){var b=blobs[i];var c=new THREE.Mesh(new THREE.IcosahedronGeometry(b[3]*s,0),mat(0x57a64a));
       c.position.set(b[0]*s,b[1]*s,b[2]*s);c.rotation.set(Math.random(),Math.random(),Math.random());c.castShadow=true;g.add(c);grassMats.push(c.material);}
+    return g;}
+  /* low-poly sheep & deer — stand on +Y, random yaw; head stored for a gentle idle bob.
+     kept out of grassMats on purpose (animals shouldn't gray like grass) */
+  function sheep(s){s=s||1;var g=new THREE.Group(),inner=new THREE.Group();inner.rotation.y=Math.random()*6.28;g.add(inner);
+    var wool=mat(0xece4d2),dark=mat(0x574f47);
+    var body=new THREE.Mesh(new THREE.SphereGeometry(0.8*s,7,6),wool);body.scale.set(1.3,1,1);body.position.y=0.98*s;body.castShadow=true;inner.add(body);
+    var head=new THREE.Mesh(new THREE.SphereGeometry(0.3*s,7,6),dark);head.position.set(1.05*s,1.28*s,0);inner.add(head);
+    for(var i=0;i<4;i++){var lg=new THREE.Mesh(new THREE.CylinderGeometry(0.09*s,0.09*s,0.6*s,5),dark);lg.position.set((i<2?0.5:-0.5)*s,0.3*s,(i%2?0.32:-0.32)*s);inner.add(lg);}
+    animals.push({head:head,y0:1.28*s,ph:Math.random()*6.28});return g;}
+  function deer(s){s=s||1;var g=new THREE.Group(),inner=new THREE.Group();inner.rotation.y=Math.random()*6.28;g.add(inner);
+    var hide=mat(0xb08a5e),dark2=mat(0x6e4f33);
+    var body=new THREE.Mesh(new THREE.SphereGeometry(0.72*s,7,6),hide);body.scale.set(1.5,0.95,0.85);body.position.y=1.35*s;body.castShadow=true;inner.add(body);
+    var neck=new THREE.Mesh(new THREE.CylinderGeometry(0.16*s,0.2*s,0.9*s,5),hide);neck.position.set(0.95*s,1.9*s,0);neck.rotation.z=-0.5;inner.add(neck);
+    var head=new THREE.Mesh(new THREE.SphereGeometry(0.26*s,7,6),hide);head.position.set(1.28*s,2.3*s,0);inner.add(head);
+    for(var a=0;a<2;a++){var an=new THREE.Mesh(new THREE.ConeGeometry(0.045*s,0.55*s,4),dark2);an.position.set(1.24*s,2.62*s,(a?0.14:-0.14)*s);an.rotation.z=a?0.35:0.2;an.rotation.x=a?0.5:-0.5;inner.add(an);}
+    for(var i2=0;i2<4;i2++){var lg2=new THREE.Mesh(new THREE.CylinderGeometry(0.075*s,0.075*s,1.0*s,5),dark2);lg2.position.set((i2<2?0.62:-0.62)*s,0.5*s,(i2%2?0.26:-0.26)*s);inner.add(lg2);}
+    animals.push({head:head,y0:2.3*s,ph:Math.random()*6.28});return g;}
+  /* soft low-poly cloud — a few flattened puffs sharing one tintable material */
+  function cloud(){var g=new THREE.Group(),m=new THREE.MeshStandardMaterial({color:0xf5f2ea,flatShading:true,roughness:1,metalness:0,transparent:true,opacity:0.92});cloudMats.push(m);
+    var puffs=[[0,0,0,2.4],[2.1,0.4,0.3,1.7],[-2.0,0.3,-0.2,1.6],[0.5,0.9,-0.4,1.5]];
+    for(var i=0;i<puffs.length;i++){var p=puffs[i],ms=new THREE.Mesh(new THREE.SphereGeometry(p[3],7,5),m);ms.scale.y=0.55;ms.position.set(p[0],p[1],p[2]);g.add(ms);}
     return g;}
 
   var _Y=new THREE.Vector3(0,1,0),_q=new THREE.Quaternion();
@@ -333,9 +366,52 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   for(var i=0;i<4;i++){place(halfA,rock(0.8+Math.random()),randDir(1,0.55),R-0.3);}
   for(var i=0;i<4;i++){place(halfB,rock(0.8+Math.random()),randDir(-1,0.55),R-0.3);}
 
-  // us — figures at the very top edge of halfA (the seam), so they sit beside God at the start
-  place(halfA,figure(0x6a7bd0),new THREE.Vector3(-0.13,0.965,0.22),R-0.1);
-  place(halfA,figure(0xcf7d6a),new THREE.Vector3(0.04,0.965,0.255),R-0.1);
+  // a winding river on each half, meeting at the seam — visibly severed when the world cracks.
+  // one shared material so it can gray out during sin and revive with healing (not in grassMats)
+  var riverMat=new THREE.MeshStandardMaterial({color:0x3d87c9,emissive:0x1f5d8e,emissiveIntensity:0.5,roughness:0.3,flatShading:true});
+  function river(half,dirs){
+    // a spline through points on a sphere cuts straight chords that dip below the surface,
+    // so resample the rough curve finely and re-project every sample back onto the sphere
+    // before building the tube — that keeps the whole path hugging the ground, not just its ends.
+    var ctrl=dirs.map(function(d){return new THREE.Vector3(d[0],d[1],d[2]).normalize();});
+    var rough=new THREE.CatmullRomCurve3(ctrl);
+    var pts=[];
+    for(var i=0;i<=48;i++){var p=rough.getPoint(i/48);p.normalize().multiplyScalar(R-0.32);pts.push(p);}
+    var tube=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),90,0.5,6,false),riverMat);
+    tube.receiveShadow=true;half.add(tube);return tube;}
+  river(halfA,[[0.40,0.62,0.06],[0.50,0.50,0.34],[0.45,0.35,0.58],[0.28,0.22,0.76],[0.10,0.12,0.88]]);
+  river(halfB,[[0.40,0.60,-0.06],[0.28,0.48,-0.40],[0.10,0.34,-0.66],[-0.10,0.18,-0.84]]);
+  var lake=new THREE.Group(),lakeM=new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.9,0.5,10),riverMat);lakeM.position.y=0.1;lake.add(lakeM);
+  place(halfA,lake,new THREE.Vector3(0.10,0.12,0.88),R-0.32);
+
+  // a few sheep and a deer on the slopes (below the summit, like the trees)
+  place(halfA,sheep(1),randDir(1,0.5),R-0.15);
+  place(halfA,sheep(0.85),randDir(1,0.5),R-0.15);
+  place(halfB,sheep(0.95),randDir(-1,0.5),R-0.15);
+  place(halfB,deer(1),randDir(-1,0.45),R-0.15);
+
+  // slow drifting clouds orbiting the planet; they still and gray during the sin beats
+  var clouds=[];
+  for(var ci=0;ci<5;ci++){var cl=cloud();cl.userData={ang:Math.random()*6.28,spd:(0.018+Math.random()*0.03)*(ci%2?1:-1),rad:40+Math.random()*8,h:5+Math.random()*10};scene.add(cl);clouds.push(cl);}
+
+  // radial heal: record each grass material's distance from the summit so color
+  // returns as a wave spreading outward from the cross (hemisphere ground defaults mid-wave)
+  var grassD=[];
+  (function(){var idx=new Map();grassMats.forEach(function(m,i){idx.set(m,i);grassD[i]=0.55;});
+    var v=new THREE.Vector3(),summit=new THREE.Vector3(0,R,0);
+    [halfA,halfB].forEach(function(h){h.updateMatrixWorld(true);h.traverse(function(o){
+      if(o.isMesh&&idx.has(o.material)){o.getWorldPosition(v);grassD[idx.get(o.material)]=Math.min(1,v.distanceTo(summit)/(R*1.7));}});});
+  })();
+
+  // us — figures at the very top edge of halfA (the seam), so they sit beside God at the start.
+  // once the cross bridges the rift they walk across it to God's side (driven in the render loop)
+  var person1=place(halfA,figure(0x6a7bd0),new THREE.Vector3(-0.13,0.965,0.22),R-0.1);
+  var person2=place(halfA,figure(0xcf7d6a),new THREE.Vector3(0.04,0.965,0.255),R-0.1);
+  var walkers=[
+    {fig:person1,homeP:person1.position.clone(),homeQ:person1.quaternion.clone(),xoff:-0.6,lag:0,endDir:new THREE.Vector3(-0.10,0.96,-0.21).normalize()},
+    {fig:person2,homeP:person2.position.clone(),homeQ:person2.quaternion.clone(),xoff:0.6,lag:0.12,endDir:new THREE.Vector3(0.06,0.96,-0.24).normalize()}
+  ];
+  var IDQ=new THREE.Quaternion(),_wq=new THREE.Quaternion(),_wv=new THREE.Vector3(),_wv2=new THREE.Vector3();
 
   // God's warm presence at the top edge of halfB — close to the people until sin separates them
   var presence=new THREE.Group(); halfB.add(presence);
@@ -365,18 +441,46 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
     motes=new THREE.Points(pg,new THREE.PointsMaterial({color:0xffe9c0,size:0.6,transparent:true,opacity:0.75,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(motes);}
 
+  /* night sky for the dawn opening — fades out as the sun rises */
+  var starPts=(function(){var N=320,pg=new THREE.BufferGeometry(),pos=new Float32Array(N*3);
+    for(var k=0;k<N;k++){var u=Math.random()*1.25-0.25,th=Math.random()*Math.PI*2,sr=Math.sqrt(Math.max(0,1-u*u));
+      pos[k*3]=sr*Math.cos(th)*430;pos[k*3+1]=u*430;pos[k*3+2]=sr*Math.sin(th)*430;}
+    pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    var p=new THREE.Points(pg,new THREE.PointsMaterial({color:0xdfe8ff,size:1.7,sizeAttenuation:false,transparent:true,opacity:0.9,depthWrite:false,fog:false}));
+    scene.add(p);return p;})();
+
+  /* dust rising from the seam while the world cracks */
+  var dustN=reduce?0:56,dust=null,dustDir=[],dustR=[],dustSpd=[],dustZ=[];
+  if(dustN){var dg=new THREE.BufferGeometry(),dpos=new Float32Array(dustN*3);
+    for(var k2=0;k2<dustN;k2++){var th2=(0.15+0.7*Math.random())*Math.PI;
+      dustDir.push(new THREE.Vector3(Math.cos(th2),Math.sin(th2),0));
+      dustR.push(R*(0.75+Math.random()*0.3));dustSpd.push(1.5+Math.random()*2.5);dustZ.push((Math.random()-0.5)*3);}
+    dg.setAttribute('position',new THREE.BufferAttribute(dpos,3));
+    dust=new THREE.Points(dg,new THREE.PointsMaterial({color:0x9c8a76,size:1.6,transparent:true,opacity:0,depthWrite:false}));
+    dust.visible=false;scene.add(dust);}
+
+  /* faint light shafts radiating from the cross; flare briefly when it appears */
+  var rays=new THREE.Group();rays.position.set(0,R*0.94+4,0);rays.visible=false;scene.add(rays);
+  var rayMat=new THREE.MeshBasicMaterial({color:0xffe2ae,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,fog:false});
+  [[0.55,0.8,0.25],[-0.5,0.85,-0.2],[0.15,0.95,-0.5],[-0.2,0.9,0.5],[0.85,0.55,0],[-0.8,0.6,0.15]].forEach(function(dd){
+    var d=new THREE.Vector3(dd[0],dd[1],dd[2]).normalize();
+    var cone=new THREE.Mesh(new THREE.ConeGeometry(2.0,26,6,1,true),rayMat);
+    cone.position.copy(d).multiplyScalar(13);
+    cone.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().negate());
+    rays.add(cone);});
+
   /* ---- interpolation helpers ---- */
   function fs(t,s){if(t<=s[0][0])return s[0][1];var n=s.length;if(t>=s[n-1][0])return s[n-1][1];
     for(var i=1;i<n;i++){if(t<=s[i][0]){var a=s[i-1],b=s[i],u=(t-a[0])/(b[0]-a[0]);u=u*u*(3-2*u);return a[1]+(b[1]-a[1])*u;}}return s[n-1][1];}
-  var _c=new THREE.Color();
+  var _c=new THREE.Color(),_c2=new THREE.Color();
   function ck(t,s){if(t<=s[0][0])return _c.copy(s[0][1]);var n=s.length;if(t>=s[n-1][0])return _c.copy(s[n-1][1]);
     for(var i=1;i<n;i++){if(t<=s[i][0]){var a=s[i-1],b=s[i],u=(t-a[0])/(b[0]-a[0]);u=u*u*(3-2*u);return _c.copy(a[1]).lerp(b[1],u);}}return _c.copy(s[n-1][1]);}
   function C(h){return new THREE.Color(h);}
 
-  var fogStops=[[0,C(0xeec0a0)],[0.25,C(0xe9b48f)],[0.47,C(0x5b6274)],[0.60,C(0x7d8088)],[0.72,C(0xf0c890)],[0.92,C(0xffe0b0)]];
-  var sunIntStops=[[0,1.5],[0.25,1.45],[0.47,0.5],[0.62,0.95],[0.74,1.5],[0.92,1.7]];
-  var hemiStops=[[0,1.15],[0.25,1.12],[0.47,0.45],[0.72,1.08],[0.92,1.25]];
-  var sunColStops=[[0,C(0xffd9a8)],[0.47,C(0x9fb0c8)],[0.72,C(0xffd29a)],[0.92,C(0xffe3b0)]];
+  var fogStops=[[0,C(0x39415e)],[0.05,C(0xeec0a0)],[0.25,C(0xe9b48f)],[0.47,C(0x5b6274)],[0.60,C(0x7d8088)],[0.72,C(0xf0c890)],[0.92,C(0xffe0b0)]];
+  var sunIntStops=[[0,0.5],[0.05,1.5],[0.25,1.45],[0.47,0.5],[0.62,0.95],[0.74,1.5],[0.92,1.7]];
+  var hemiStops=[[0,0.4],[0.05,1.15],[0.25,1.12],[0.47,0.45],[0.72,1.08],[0.92,1.25]];
+  var sunColStops=[[0,C(0xff9560)],[0.05,C(0xffd9a8)],[0.47,C(0x9fb0c8)],[0.72,C(0xffd29a)],[0.92,C(0xffe3b0)]];
   var moodStops=[[0,0],[0.25,0],[0.47,0.55],[0.58,0.38],[0.70,0.04],[1,0]];
   var greenC=C(0x6fae54),grayC=C(0x6a6a66),vividC=C(0x7cc95f);
 
@@ -427,12 +531,20 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   addEventListener('scroll',function(){tgtT=scrollT();},{passive:true});
 
   var overlays=[].slice.call(document.querySelectorAll('.overlay'));
+  // stagger delays: each panel rises in turn, then its lines fade in sequence
+  overlays.forEach(function(o){[].slice.call(o.querySelectorAll('.panel')).forEach(function(p,pi){
+    p.style.transitionDelay=(pi*0.5)+'s';
+    [].slice.call(p.children).forEach(function(ch,ci){ch.style.transitionDelay=(pi*0.5+0.25+ci*0.2)+'s';});});});
   function sm(a,b,x){if(x<=a)return 0;if(x>=b)return 1;var t=(x-a)/(b-a);return t*t*(3-2*t);}
   function updateOverlays(t){overlays.forEach(function(o){
       var s=parseFloat(o.dataset.s),e=parseFloat(o.dataset.e),h=parseFloat(o.dataset.h);
       var op=Math.max(0,Math.min(sm(s,s+h,t),1-sm(e-h,e,t)));o.style.opacity=op.toFixed(3);
+      if(op>0.3&&!o._rv){o._rv=1;o.classList.add('reveal');}
+      else if(op<=0.02&&o._rv){o._rv=0;o.classList.remove('reveal');}
       if(o.id==='cta') o.style.pointerEvents=op>0.4?'auto':'none';});
-    document.getElementById('cue').style.opacity=t>0.04?0:0.85;}
+    document.getElementById('cue').style.opacity=t>0.04?0:0.85;
+    // title appears just before the first words, disappears for the journey, returns at the end
+    document.getElementById('hud').style.opacity=fs(t,[[0,0],[0.008,0],[0.024,0.85],[0.045,0.85],[0.065,0],[0.90,0],[0.945,0.85]]).toFixed(3);}
 
   addEventListener('resize',function(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));});
 
@@ -445,6 +557,12 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     var healAmt=fs(t,[[0,0],[0.55,0],[0.80,1]]);
     var crossGrow=fs(t,[[0,0],[0.622,0],[0.700,1],[1,1]]);
     var bloom=fs(t,[[0,0],[0.810,0],[0.88,1]]);
+    var rise=fs(t,[[0,0],[0.012,0],[0.05,1],[1,1]]);          // dawn sunrise
+    var starOp=fs(t,[[0,0.9],[0.018,0.9],[0.05,0],[1,0]]);    // stars fade as the sun rises
+    var burst=fs(t,[[0,0],[0.688,0],[0.702,1],[0.74,0],[1,0]]); // flash when the cross completes
+    var shake=reduce?0:fs(t,[[0,0],[0.20,0],[0.26,1],[0.36,0.65],[0.41,0],[1,0]]); // crack tremor
+    var walk=fs(t,[[0,0],[0.712,0],[0.802,1],[1,1]]);         // people cross the bridge
+    window.__shake=shake;
 
     // the globe cracks apart
     var gap=sinAmt*20;
@@ -463,32 +581,75 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     orb.scale.setScalar(1+Math.sin(tm*1.3)*0.06);
     orbGlow.material.opacity=0.45+pInt*0.22; orbGlow.scale.setScalar(8+pInt*2.2);
 
-    // grass heals: green -> gray (sin) -> vivid (new creation)
-    var g1=_c.copy(greenC).lerp(grayC,sinAmt*(1-healAmt*0.9));var gc=g1.clone().lerp(vividC,healAmt*0.55);
-    for(var gi=0;gi<grassMats.length;gi++){grassMats[gi].color.copy(gc);}
+    // grass heals as a wave spreading outward from the cross: green -> gray (sin) -> vivid
+    for(var gi=0;gi<grassMats.length;gi++){
+      var hw=Math.max(0,Math.min(1,(healAmt*1.35-grassD[gi])/0.35));hw=hw*hw*(3-2*hw);
+      _c.copy(greenC).lerp(grayC,sinAmt*(1-hw*0.9));_c.lerp(vividC,hw*0.55);
+      grassMats[gi].color.copy(_c);
+    }
+    // river and clouds gray out with the broken world and revive with healing
+    var worldGray=sinAmt*(1-healAmt);
+    riverMat.color.copy(_c.set(0x3d87c9).lerp(_c2.set(0x6f7880),worldGray));
+    riverMat.emissiveIntensity=0.15+0.45*(1-worldGray);
+    _c.set(0xf5f2ea).lerp(_c2.set(0x8d9096),worldGray);
+    for(var cm=0;cm<cloudMats.length;cm++){cloudMats[cm].color.copy(_c);}
+    for(var ci2=0;ci2<clouds.length;ci2++){var cl2=clouds[ci2],cu=cl2.userData;
+      if(!reduce)cu.ang+=dt*cu.spd*(0.3+0.7*(1-worldGray));
+      cl2.position.set(Math.cos(cu.ang)*cu.rad,cu.h,Math.sin(cu.ang)*cu.rad);}
+    for(var ai=0;ai<animals.length;ai++){var an2=animals[ai];if(!reduce)an2.head.position.y=an2.y0+Math.sin(tm*1.1+an2.ph)*0.07;}
 
     // the cross bridges the gap, then glows
     var span=(gap+11);
     plank.scale.z=Math.max(0.001,crossGrow*span);
     crossUp.scale.set(Math.max(0.001,crossGrow),Math.max(0.001,crossGrow),Math.max(0.001,crossGrow));
     bridge.visible=crossGrow>0.01;
-    crossLight.intensity=crossGrow*2.4;
-    crossGlow.material.opacity=crossGrow*0.8; crossGlow.scale.setScalar(9+crossGrow*4);
+    crossLight.intensity=crossGrow*2.4+burst*5;
+    crossGlow.material.opacity=Math.min(1,crossGrow*0.8+burst*0.6); crossGlow.scale.setScalar(9+crossGrow*4+burst*22);
+    rays.visible=crossGrow>0.02;
+    if(rays.visible){rayMat.opacity=crossGrow*0.09+burst*0.28;if(!reduce)rays.rotation.y=tm*0.05;}
 
-    // new creation blooms
-    for(var fi=0;fi<flowers.length;fi++){flowers[fi].scale.setScalar(Math.max(0.001,bloom));}
+    // new creation blooms — flowers pop in one by one with a soft overshoot
+    for(var fi=0;fi<flowers.length;fi++){var fo=flowers[fi].userData.off*0.55;
+      var fb=sm(fo,fo+0.45,bloom);
+      flowers[fi].scale.setScalar(Math.max(0.001,fb*(1+0.25*Math.sin(Math.PI*fb))));}
 
-    // mood / light / fog
+    // mood / light / fog — the sun physically rises out of the dawn during the pre-roll
     scene.fog.color.copy(ck(t,fogStops));
     sun.intensity=fs(t,sunIntStops); sun.color.copy(ck(t,sunColStops)); hemiL.intensity=fs(t,hemiStops);
+    sun.position.set(-50,4+42*rise,30);
+    starPts.material.opacity=starOp; starPts.visible=starOp>0.01;
+    if(starPts.visible&&!reduce)starPts.rotation.y=tm*0.004;
     document.getElementById('mood').style.opacity=fs(t,moodStops).toFixed(3);
 
     // orbiting camera
     var ang=fs(t,angStops),rad=fs(t,radStops),hy=fs(t,hgtStops);
     camera.position.set(Math.sin(ang)*rad+Math.sin(tm*0.2)*0.6, hy+Math.sin(tm*0.35)*0.5, Math.cos(ang)*rad+Math.cos(tm*0.2)*0.6);
+    if(shake>0.001){camera.position.x+=Math.sin(tm*33.1)*0.16*shake;camera.position.y+=Math.sin(tm*41.7)*0.12*shake;camera.position.z+=Math.cos(tm*37.3)*0.14*shake;}
     camera.lookAt(0,fs(t,lookYStops)+Math.sin(tm*0.4)*0.3,0);
 
     if(motes){var mp=motes.geometry.attributes.position.array;for(var m2=0;m2<moteN;m2++){mp[m2*3+1]+=mv[m2];if(mp[m2*3+1]>80)mp[m2*3+1]=-70;}motes.geometry.attributes.position.needsUpdate=true;}
+
+    // dust drifting up out of the rift while the world cracks
+    if(dust){var dOp=shake*0.5+riftGlow*0.06;dust.visible=dOp>0.01;
+      if(dust.visible){dust.material.opacity=dOp;var dp=dust.geometry.attributes.position.array;
+        for(var di=0;di<dustN;di++){dustR[di]+=dustSpd[di]*dt*(0.5+shake);if(dustR[di]>R+10)dustR[di]=R*0.78;
+          dp[di*3]=dustDir[di].x*dustR[di];dp[di*3+1]=dustDir[di].y*dustR[di];dp[di*3+2]=dustZ[di];}
+        dust.geometry.attributes.position.needsUpdate=true;}}
+
+    // once the cross bridges the rift, the people walk across it to God's side
+    for(var wi=0;wi<walkers.length;wi++){var W=walkers[wi];
+      var wu=Math.max(0,Math.min(1,(walk-W.lag)/(1-W.lag)));
+      if(wu<=0){W.fig.position.copy(W.homeP);W.fig.quaternion.copy(W.homeQ);continue;}
+      var zEdge=gap/2+3.2,by=R*0.94+0.42;
+      _wv.copy(W.homeP);_wv.z+=gap/2; // home position in world space (halfA is translation-only)
+      if(wu<0.22){_wv.lerp(_wv2.set(W.xoff,by,zEdge),wu/0.22);}
+      else if(wu<0.78){_wv.set(W.xoff,by,zEdge).lerp(_wv2.set(W.xoff,by,-zEdge),(wu-0.22)/0.56);}
+      else{_wv2.copy(W.endDir).multiplyScalar(R-0.1);_wv2.z-=gap/2;_wv.set(W.xoff,by,-zEdge).lerp(_wv2,(wu-0.78)/0.22);}
+      if(!reduce&&wu<1)_wv.y+=Math.abs(Math.sin(wu*Math.PI*12))*0.22*Math.min(1,4*wu*(1-wu));
+      W.fig.position.set(_wv.x,_wv.y,_wv.z-gap/2); // back into halfA's local space
+      W.fig.quaternion.copy(W.homeQ).slerp(IDQ,sm(0,0.18,wu));
+      if(wu>0.7){_wq.setFromUnitVectors(_Y,W.endDir);W.fig.quaternion.slerp(_wq,sm(0.7,1,wu));}
+    }
 
     updateOverlays(t);
     renderer.render(scene,camera);
@@ -504,10 +665,25 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   var bgm=document.getElementById('bgm'),btn=document.getElementById('music'),hint=document.getElementById('music-hint');
   var TARGET=0.55,fadeTimer=null,playing=false;
   bgm.src='music.mp3'; bgm.volume=0;
+  /* deep filtered-noise rumble, heard only while the world cracks (window.__shake is set
+     each frame by the scene). Created on the music tap so it counts as a user gesture. */
+  var actx=null,rGain=null;
+  function initRumble(){if(actx)return;try{
+    actx=new (window.AudioContext||window.webkitAudioContext)();
+    var len=2*actx.sampleRate,buf=actx.createBuffer(1,len,actx.sampleRate),d=buf.getChannelData(0),last=0;
+    for(var i=0;i<len;i++){var w=Math.random()*2-1;last=(last+0.02*w)/1.02;d[i]=last*3.5;}
+    var src=actx.createBufferSource();src.buffer=buf;src.loop=true;
+    var f=actx.createBiquadFilter();f.type='lowpass';f.frequency.value=65;
+    rGain=actx.createGain();rGain.gain.value=0;
+    src.connect(f);f.connect(rGain);rGain.connect(actx.destination);src.start();
+    setInterval(function(){if(!rGain)return;var tgt=(playing?(window.__shake||0):0)*0.4;
+      rGain.gain.setTargetAtTime(tgt,actx.currentTime,0.1);},90);
+  }catch(e){}}
   function fadeTo(target){clearInterval(fadeTimer);fadeTimer=setInterval(function(){var d=target-bgm.volume;
     if(Math.abs(d)<0.02){bgm.volume=Math.max(0,Math.min(1,target));clearInterval(fadeTimer);if(target===0)bgm.pause();return;}
     bgm.volume=Math.max(0,Math.min(1,bgm.volume+d*0.07));},40);}
   function toggle(){if(!playing){var p=bgm.play();if(p&&p.catch)p.catch(function(){hint.textContent='Add music.mp3 to the folder';hint.classList.add('show');});
+      initRumble();if(actx&&actx.state==='suspended')actx.resume();
       playing=true;btn.classList.add('on');btn.classList.remove('off');fadeTo(TARGET);hint.classList.remove('show');}
     else{playing=false;btn.classList.remove('on');btn.classList.add('off');fadeTo(0);}}
   btn.addEventListener('click',toggle);
