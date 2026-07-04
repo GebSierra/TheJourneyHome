@@ -15,7 +15,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   background:linear-gradient(180deg,#16244c 0%,#3f4f86 24%,#8a7fae 48%,#e7a98c 74%,#ffd9a0 100%);}
 #scene{position:fixed;inset:0;z-index:1;display:block}
 #mood{position:fixed;inset:0;z-index:2;background:#0a1024;opacity:0;pointer-events:none;transition:opacity .12s linear}
-#spacer{position:relative;z-index:3;height:2500vh;pointer-events:none}
+#spacer{position:relative;z-index:3;height:2550vh;pointer-events:none}
 
 .overlay{position:fixed;inset:0;z-index:4;display:flex;justify-content:center;align-items:flex-end;text-align:center;padding:0 6vw 9vh;pointer-events:none;opacity:0;will-change:opacity}
 .overlay#cta{align-items:center;padding-bottom:0}
@@ -59,6 +59,8 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 #cue svg{display:block;margin:.5rem auto 0}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 #hud{position:fixed;left:50%;top:22px;transform:translateX(-50%);z-index:5;font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,247,236,.7);text-shadow:0 2px 12px rgba(0,0,0,.4)}
+#prog{position:fixed;top:0;right:0;width:4px;height:100%;z-index:5;background:rgba(255,247,236,.12);pointer-events:none}
+#prog-fill{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg,#ffd9a0,#e8b563);transform:scaleY(0);transform-origin:top;border-radius:0 0 4px 4px}
 
 #cta .btn{display:inline-block;margin:.4rem .4rem 0;padding:.85rem 1.8rem;border-radius:999px;font-weight:600;font-size:.98rem;text-decoration:none;color:#1a1305;background:linear-gradient(180deg,#ffd9a0,#e8b563);box-shadow:0 8px 30px rgba(0,0,0,.3)}
 #cta .btn.ghost{background:none;color:#fff7ec;border:1px solid rgba(255,247,236,.5)}
@@ -92,6 +94,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 <canvas id="scene"></canvas>
 <div id="mood"></div>
 <div id="hud">He Gave His Life · a journey</div>
+<div id="prog"><div id="prog-fill"></div></div>
 
 <div class="overlay" data-s="0.035" data-e="0.180" data-h="0.030">
   <div class="panel-stack">
@@ -181,7 +184,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     </div>
   </div>
 </div>
-<div class="overlay" data-s="0.712" data-e="0.758" data-h="0.020">
+<div class="overlay" data-s="0.712" data-e="0.774" data-h="0.018">
   <div class="panel-stack">
     <div class="panel">
       <div class="kicker">A free gift</div>
@@ -193,13 +196,13 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     </div>
   </div>
 </div>
-<div class="overlay" data-s="0.768" data-e="0.800" data-h="0.014">
+<div class="overlay" data-s="0.780" data-e="0.820" data-h="0.013">
   <div class="panel">
     <h1>Will you receive this <span class="hl-green">free gift?</span></h1>
     <p>Will you trust in Christ alone for the <span class="hl-green">forgiveness</span> of your sins?</p>
   </div>
 </div>
-<div class="overlay" data-s="0.810" data-e="0.839" data-h="0.013">
+<div class="overlay" data-s="0.826" data-e="0.866" data-h="0.012">
   <div class="panel-stack">
     <div class="panel">
       <div class="kicker">A new creation</div>
@@ -211,7 +214,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     </div>
   </div>
 </div>
-<div class="overlay" data-s="0.849" data-e="0.874" data-h="0.011">
+<div class="overlay" data-s="0.872" data-e="0.905" data-h="0.010">
   <div class="panel-stack">
     <div class="panel sm">
       <p>Not only can he make you <span class="hl-gold">new</span>, but he is going to remake the entire world.</p>
@@ -222,7 +225,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     </div>
   </div>
 </div>
-<div class="overlay" id="cta" data-s="0.920" data-e="1.15" data-h="0.014">
+<div class="overlay" id="cta" data-s="0.925" data-e="1.15" data-h="0.014">
   <div class="panel">
     <div class="kicker">Ways to grow with God</div>
     <div class="steps"><span>Read the Bible</span><span>Pray and Obey</span><span>Join a local church</span></div>
@@ -459,16 +462,6 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     dust=new THREE.Points(dg,new THREE.PointsMaterial({color:0x9c8a76,size:1.6,transparent:true,opacity:0,depthWrite:false}));
     dust.visible=false;scene.add(dust);}
 
-  /* faint light shafts radiating from the cross; flare briefly when it appears */
-  var rays=new THREE.Group();rays.position.set(0,R*0.94+4,0);rays.visible=false;scene.add(rays);
-  var rayMat=new THREE.MeshBasicMaterial({color:0xffe2ae,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,fog:false});
-  [[0.55,0.8,0.25],[-0.5,0.85,-0.2],[0.15,0.95,-0.5],[-0.2,0.9,0.5],[0.85,0.55,0],[-0.8,0.6,0.15]].forEach(function(dd){
-    var d=new THREE.Vector3(dd[0],dd[1],dd[2]).normalize();
-    var cone=new THREE.Mesh(new THREE.ConeGeometry(2.0,26,6,1,true),rayMat);
-    cone.position.copy(d).multiplyScalar(13);
-    cone.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().negate());
-    rays.add(cone);});
-
   /* ---- interpolation helpers ---- */
   function fs(t,s){if(t<=s[0][0])return s[0][1];var n=s.length;if(t>=s[n-1][0])return s[n-1][1];
     for(var i=1;i<n;i++){if(t<=s[i][0]){var a=s[i-1],b=s[i],u=(t-a[0])/(b[0]-a[0]);u=u*u*(3-2*u);return a[1]+(b[1]-a[1])*u;}}return s[n-1][1];}
@@ -495,21 +488,24 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
      beats' own reading pace untouched. Segments alternate: content (weight 1, normal
      pace) and gap (weight GAP_W, slow pace = more scrolling per unit of story-time).
      Story-time itself (fed to curT/fs()/ck()/overlays) is completely unchanged. */
-  var GAP_W=3, PREROLL_W=1;
+  /* Weights are chosen so EVERY text beat occupies the same physical scroll length
+     (~150vh; the 3-panel opener gets 1.4x), every gap the same short pause (~45vh;
+     the finale gap before the CTA ~120vh), and the pre-roll is brief (~30vh) so a
+     first-time visitor immediately sees that scrolling drives the story. */
   var TIME_SEGMENTS=[
-    [0.000,0.035,PREROLL_W],
-    [0.035,0.180,1],[0.180,0.192,GAP_W],
-    [0.192,0.288,1],[0.288,0.300,GAP_W],
-    [0.300,0.390,1],[0.390,0.402,GAP_W],
-    [0.402,0.464,1],[0.464,0.476,GAP_W],
-    [0.476,0.538,1],[0.538,0.550,GAP_W],
-    [0.550,0.610,1],[0.610,0.622,GAP_W],
-    [0.622,0.700,1],[0.700,0.712,GAP_W],
-    [0.712,0.758,1],[0.758,0.768,GAP_W],
-    [0.768,0.800,1],[0.800,0.810,GAP_W],
-    [0.810,0.839,1],[0.839,0.849,GAP_W],
-    [0.849,0.874,1],[0.874,0.920,GAP_W],
-    [0.920,1.000,1]
+    [0.000,0.035,0.35],                      // pre-roll (short: scroll->response is obvious)
+    [0.035,0.180,0.60],[0.180,0.192,1.55],   // B0 creation (3 panels, 1.4x) | gap
+    [0.192,0.288,0.646],[0.288,0.300,1.55],  // B1 good person
+    [0.300,0.390,0.689],[0.390,0.402,1.55],  // B2 the problem
+    [0.402,0.464,1],[0.464,0.476,1.55],      // B3 fix ourselves
+    [0.476,0.538,1],[0.538,0.550,1.55],      // B4 nothing we can do
+    [0.550,0.610,1.033],[0.610,0.622,1.55],  // B5 but God
+    [0.622,0.700,0.795],[0.700,0.712,1.55],  // B6 the cross
+    [0.712,0.774,1],[0.774,0.780,3.1],       // B7 free gift
+    [0.780,0.820,1.55],[0.820,0.826,3.1],    // B8 will you receive
+    [0.826,0.866,1.55],[0.866,0.872,3.1],    // B9 new creation
+    [0.872,0.905,1.879],[0.905,0.925,2.48],  // B10 remake the world | long finale gap
+    [0.925,1.000,0.827]                      // CTA
   ];
   var REMAP=(function(){
     var totalW=0; TIME_SEGMENTS.forEach(function(s){totalW+=(s[1]-s[0])*s[2];});
@@ -544,7 +540,8 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
       if(o.id==='cta') o.style.pointerEvents=op>0.4?'auto':'none';});
     document.getElementById('cue').style.opacity=t>0.04?0:0.85;
     // title appears just before the first words, disappears for the journey, returns at the end
-    document.getElementById('hud').style.opacity=fs(t,[[0,0],[0.008,0],[0.024,0.85],[0.045,0.85],[0.065,0],[0.90,0],[0.945,0.85]]).toFixed(3);}
+    document.getElementById('hud').style.opacity=fs(t,[[0,0],[0.008,0],[0.024,0.85],[0.045,0.85],[0.065,0],[0.90,0],[0.945,0.85]]).toFixed(3);
+    document.getElementById('prog-fill').style.transform='scaleY('+t.toFixed(4)+')';}
 
   addEventListener('resize',function(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));});
 
@@ -554,14 +551,14 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     curT+=(tgtT-curT)*Math.min(1,dt*2.1); var t=curT;
 
     var sinAmt=fs(t,[[0,0],[0.19,0],[0.39,1],[1,1]]);
-    var healAmt=fs(t,[[0,0],[0.55,0],[0.80,1]]);
+    var healAmt=fs(t,[[0,0],[0.55,0],[0.820,1]]);
     var crossGrow=fs(t,[[0,0],[0.622,0],[0.700,1],[1,1]]);
-    var bloom=fs(t,[[0,0],[0.810,0],[0.88,1]]);
+    var bloom=fs(t,[[0,0],[0.826,0],[0.88,1]]);
     var rise=fs(t,[[0,0],[0.012,0],[0.05,1],[1,1]]);          // dawn sunrise
     var starOp=fs(t,[[0,0.9],[0.018,0.9],[0.05,0],[1,0]]);    // stars fade as the sun rises
     var burst=fs(t,[[0,0],[0.688,0],[0.702,1],[0.74,0],[1,0]]); // flash when the cross completes
     var shake=reduce?0:fs(t,[[0,0],[0.20,0],[0.26,1],[0.36,0.65],[0.41,0],[1,0]]); // crack tremor
-    var walk=fs(t,[[0,0],[0.712,0],[0.802,1],[1,1]]);         // people cross the bridge
+    var walk=fs(t,[[0,0],[0.712,0],[0.815,1],[1,1]]);         // people cross the bridge
     window.__shake=shake;
 
     // the globe cracks apart
@@ -605,8 +602,6 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     bridge.visible=crossGrow>0.01;
     crossLight.intensity=crossGrow*2.4+burst*5;
     crossGlow.material.opacity=Math.min(1,crossGrow*0.8+burst*0.6); crossGlow.scale.setScalar(9+crossGrow*4+burst*22);
-    rays.visible=crossGrow>0.02;
-    if(rays.visible){rayMat.opacity=crossGrow*0.09+burst*0.28;if(!reduce)rays.rotation.y=tm*0.05;}
 
     // new creation blooms — flowers pop in one by one with a soft overshoot
     for(var fi=0;fi<flowers.length;fi++){var fo=flowers[fi].userData.off*0.55;
