@@ -15,7 +15,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   background:linear-gradient(180deg,#16244c 0%,#3f4f86 24%,#8a7fae 48%,#e7a98c 74%,#ffd9a0 100%);}
 #scene{position:fixed;inset:0;z-index:1;display:block}
 #mood{position:fixed;inset:0;z-index:2;background:#0a1024;opacity:0;pointer-events:none;transition:opacity .12s linear}
-#spacer{position:relative;z-index:3;height:2550vh;pointer-events:none}
+#spacer{position:relative;z-index:3;height:950vh;pointer-events:none}
 
 .overlay{position:fixed;inset:0;z-index:4;display:flex;justify-content:center;align-items:flex-end;text-align:center;padding:0 6vw 9vh;pointer-events:none;opacity:0;will-change:opacity}
 .overlay#cta{align-items:center;padding-bottom:0}
@@ -59,8 +59,16 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 #cue svg{display:block;margin:.5rem auto 0}
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 #hud{position:fixed;left:50%;top:22px;transform:translateX(-50%);z-index:5;font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,247,236,.7);text-shadow:0 2px 12px rgba(0,0,0,.4)}
-#prog{position:fixed;top:0;right:0;width:4px;height:100%;z-index:5;background:rgba(255,247,236,.12);pointer-events:none}
-#prog-fill{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg,#ffd9a0,#e8b563);transform:scaleY(0);transform-origin:top;border-radius:0 0 4px 4px}
+
+/* dot progress: one dot per beat, right edge, click any dot to jump there */
+#dots{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:6;display:flex;flex-direction:column;gap:12px;align-items:center}
+#dots i{display:block;width:7px;height:7px;border-radius:50%;background:rgba(255,247,236,.35);border:1px solid rgba(255,247,236,.5);cursor:pointer;transition:all .3s ease;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+#dots i.on{background:#ffd9a0;border-color:#ffd9a0;transform:scale(1.5);box-shadow:0 0 8px rgba(255,217,160,.7)}
+#dots i:hover{background:rgba(255,247,236,.7)}
+
+#back{position:fixed;top:18px;left:18px;z-index:6;width:44px;height:44px;border-radius:50%;cursor:pointer;display:none;align-items:center;justify-content:center;border:1px solid rgba(255,231,189,.4);background:rgba(10,13,26,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#ffe6c2;transition:transform .25s ease}
+#back:hover{transform:scale(1.08)}
+@media (max-width:520px){#dots{right:10px;gap:9px}#dots i{width:6px;height:6px}}
 
 #cta .btn{display:inline-block;margin:.4rem .4rem 0;padding:.85rem 1.8rem;border-radius:999px;font-weight:600;font-size:.98rem;text-decoration:none;color:#1a1305;background:linear-gradient(180deg,#ffd9a0,#e8b563);box-shadow:0 8px 30px rgba(0,0,0,.3)}
 #cta .btn.ghost{background:none;color:#fff7ec;border:1px solid rgba(255,247,236,.5)}
@@ -94,7 +102,8 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 <canvas id="scene"></canvas>
 <div id="mood"></div>
 <div id="hud">He Gave His Life · a journey</div>
-<div id="prog"><div id="prog-fill"></div></div>
+<div id="dots"></div>
+<button id="back" aria-label="Previous">‹</button>
 
 <div class="overlay" data-s="0.035" data-e="0.180" data-h="0.030">
   <div class="panel-stack">
@@ -249,7 +258,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 </button>
 <div id="music-hint">Turn on music ♪</div>
 
-<div id="cue">scroll
+<div id="cue">tap to continue
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
 </div>
 <div id="spacer"></div>
@@ -493,7 +502,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
      the finale gap before the CTA ~120vh), and the pre-roll is brief (~30vh) so a
      first-time visitor immediately sees that scrolling drives the story. */
   var TIME_SEGMENTS=[
-    [0.000,0.035,0.35],                      // pre-roll (short: scroll->response is obvious)
+    [0.000,0.035,0.2],                       // pre-roll (very short: scroll->response is instant)
     [0.035,0.180,0.60],[0.180,0.192,1.55],   // B0 creation (3 panels, 1.4x) | gap
     [0.192,0.288,0.646],[0.288,0.300,1.55],  // B1 good person
     [0.300,0.390,0.689],[0.390,0.402,1.55],  // B2 the problem
@@ -523,6 +532,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   }
 
   var curT=0,tgtT=0;
+  var shakeStartTm=null; // real-time (not story-time) clock for the one-shot tremor burst
   function scrollT(){var m=document.body.scrollHeight-innerHeight;var raw=m>0?Math.min(1,Math.max(0,scrollY/m)):0;return storyTFromRaw(raw);}
   addEventListener('scroll',function(){tgtT=scrollT();},{passive:true});
 
@@ -531,6 +541,51 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   overlays.forEach(function(o){[].slice.call(o.querySelectorAll('.panel')).forEach(function(p,pi){
     p.style.transitionDelay=(pi*0.5)+'s';
     [].slice.call(p.children).forEach(function(ch,ci){ch.style.transitionDelay=(pi*0.5+0.25+ci*0.2)+'s';});});});
+
+  /* click-to-advance: an alternative to scrolling (scrolling still works too).
+     Each beat has an "anchor" story-time (fully faded in); clicking jumps to the
+     next/previous anchor by smoothly scrolling the physical page — the existing
+     scroll listener then drives curT exactly as it already does, unchanged. */
+  var BEATS=overlays.map(function(o){var s=+o.dataset.s,e=+o.dataset.e,h=+o.dataset.h;return {s:s,e:e,anchor:s+h};});
+  function storyTToRaw(storyT){
+    if(storyT<=0)return 0; if(storyT>=1)return 1;
+    for(var i=1;i<REMAP.length;i++){if(storyT<=REMAP[i][1]){
+      var a=REMAP[i-1],b=REMAP[i],u=(b[1]-a[1])>0?(storyT-a[1])/(b[1]-a[1]):0;
+      return a[0]+(b[0]-a[0])*u;
+    }}
+    return 1;
+  }
+  /* a moderate, self-timed glide between beats (browser-native "smooth" scroll varies
+     wildly in speed by browser/OS and tends to feel abrupt for a click-through story) */
+  var scrollAnim=null;
+  function animatedScrollTo(y,ms){
+    if(scrollAnim)cancelAnimationFrame(scrollAnim);
+    var startY=scrollY,dy=y-startY,t0=performance.now();
+    function step(now){
+      var u=Math.min(1,(now-t0)/ms); u=u<0.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2; // easeInOutCubic
+      window.scrollTo(0,startY+dy*u);
+      scrollAnim=u<1?requestAnimationFrame(step):null;
+    }
+    scrollAnim=requestAnimationFrame(step);
+  }
+  function scrollToStoryT(t){var m=document.body.scrollHeight-innerHeight;animatedScrollTo(storyTToRaw(t)*m,1200);}
+  function goNext(){for(var i=0;i<BEATS.length;i++){if(BEATS[i].anchor>curT+0.006){scrollToStoryT(BEATS[i].anchor);return;}}}
+  function goPrev(){for(var i=BEATS.length-1;i>=0;i--){if(BEATS[i].anchor<curT-0.006){scrollToStoryT(BEATS[i].anchor);return;}}scrollToStoryT(0);}
+
+  var dotsEl=document.getElementById('dots');
+  BEATS.forEach(function(b,i){var d=document.createElement('i');
+    d.addEventListener('click',function(e){e.stopPropagation();scrollToStoryT(b.anchor);});
+    dotsEl.appendChild(d);});
+  var backBtn=document.getElementById('back');
+  backBtn.addEventListener('click',function(e){e.stopPropagation();goPrev();});
+
+  addEventListener('click',function(e){
+    if(e.target.closest('#music,#fs,#back,#dots,a,button'))return;
+    goNext();});
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' ')goNext();
+    else if(e.key==='ArrowLeft')goPrev();});
+
   function sm(a,b,x){if(x<=a)return 0;if(x>=b)return 1;var t=(x-a)/(b-a);return t*t*(3-2*t);}
   function updateOverlays(t){overlays.forEach(function(o){
       var s=parseFloat(o.dataset.s),e=parseFloat(o.dataset.e),h=parseFloat(o.dataset.h);
@@ -541,14 +596,17 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     document.getElementById('cue').style.opacity=t>0.04?0:0.85;
     // title appears just before the first words, disappears for the journey, returns at the end
     document.getElementById('hud').style.opacity=fs(t,[[0,0],[0.008,0],[0.024,0.85],[0.045,0.85],[0.065,0],[0.90,0],[0.945,0.85]]).toFixed(3);
-    document.getElementById('prog-fill').style.transform='scaleY('+t.toFixed(4)+')';}
+    // highlight the dot for whichever beat is currently on screen (or most recently shown, if mid-gap)
+    var activeBeat=0;for(var bi=0;bi<BEATS.length;bi++){if(t>=BEATS[bi].s-0.004)activeBeat=bi;}
+    [].slice.call(dotsEl.children).forEach(function(d,di){d.classList.toggle('on',di===activeBeat);});
+    backBtn.style.display=t>0.02?'flex':'none';}
 
   addEventListener('resize',function(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,2));});
 
   var clock=new THREE.Clock();
   function tick(){
     var dt=Math.min(clock.getDelta(),0.05),tm=clock.elapsedTime;
-    curT+=(tgtT-curT)*Math.min(1,dt*2.1); var t=curT;
+    curT+=(tgtT-curT)*Math.min(1,dt*1.4); var t=curT;
 
     var sinAmt=fs(t,[[0,0],[0.19,0],[0.39,1],[1,1]]);
     var healAmt=fs(t,[[0,0],[0.55,0],[0.820,1]]);
@@ -557,7 +615,11 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     var rise=fs(t,[[0,0],[0.012,0],[0.05,1],[1,1]]);          // dawn sunrise
     var starOp=fs(t,[[0,0.9],[0.018,0.9],[0.05,0],[1,0]]);    // stars fade as the sun rises
     var burst=fs(t,[[0,0],[0.688,0],[0.702,1],[0.74,0],[1,0]]); // flash when the cross completes
-    var shake=reduce?0:fs(t,[[0,0],[0.20,0],[0.26,1],[0.36,0.65],[0.41,0],[1,0]]); // crack tremor
+    // crack tremor: a one-shot burst that fires once on arrival, then settles within ~1.8s
+    // of real time regardless of how long the reader lingers on this beat (readability)
+    if(t>0.20){if(shakeStartTm===null)shakeStartTm=tm;}else{shakeStartTm=null;}
+    var shakeEnvelope=shakeStartTm===null?0:Math.max(0,1-(tm-shakeStartTm)/1.8);
+    var shake=reduce?0:fs(t,[[0,0],[0.20,0],[0.26,1],[0.36,0.65],[0.41,0],[1,0]])*shakeEnvelope;
     var walk=fs(t,[[0,0],[0.712,0],[0.815,1],[1,1]]);         // people cross the bridge
     window.__shake=shake;
 

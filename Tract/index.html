@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>He Gave His Life — a story | Trinity Bible Church</title>
+<meta name="description" content="An animated storybook of the gospel: the world made good, broken by sin, and restored through the cross. From Trinity Bible Church.">
+<meta name="theme-color" content="#1f2b5b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1f2b5b; --ink:#161513; --gold:#f2b71c; --gold-soft:#f9cc36;
+  --red:#e0483a; --cross-red:#c2180d; --green:#17b26a;
+  --paper:#ffffff; --paper-gray:#e8e6e2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--ink);
+  overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none}
+
+/* ---------- the book ---------- */
+#book{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:var(--paper);transition:background .6s ease}
+#book.gray{background:var(--paper-gray)}
+.page{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+  padding:calc(14px + env(safe-area-inset-top)) 16px calc(74px + env(safe-area-inset-bottom));
+  max-width:640px;margin:0 auto}
+.page.active{display:flex;animation:pagein .55s ease both}
+@keyframes pagein{from{opacity:0;transform:translateX(4%)}to{opacity:1;transform:none}}
+
+.kicker{font-size:.62rem;font-weight:700;letter-spacing:.32em;text-transform:uppercase;
+  color:#8b8578;margin-bottom:.4rem;text-align:center}
+
+/* art area: sprites positioned by % */
+.art{position:relative;width:100%;flex:1;min-height:34vh}
+.el{position:absolute;left:var(--x);top:var(--y);width:var(--w);
+  transform:translate(-50%,-50%);opacity:0}
+.el img{width:100%;height:auto;display:block;pointer-events:none}
+.el .cap{font-weight:800;font-size:clamp(1.3rem,6vw,2rem);letter-spacing:.04em;text-align:center}
+
+/* entrances (on .el, triggered when page becomes active) */
+.page.active .el.fade {animation:e-fade .7s ease both;animation-delay:var(--d,0s)}
+.page.active .el.pop  {animation:e-pop .55s cubic-bezier(.34,1.56,.64,1) both;animation-delay:var(--d,0s)}
+.page.active .el.rise {animation:e-rise .7s ease both;animation-delay:var(--d,0s)}
+.page.active .el.drop {animation:e-drop .8s cubic-bezier(.22,1.2,.36,1) both;animation-delay:var(--d,0s)}
+.page.active .el.fall {animation:e-fall 1.1s cubic-bezier(.5,0,.9,.6) both;animation-delay:var(--d,0s)}
+.page.active .el.tear {transform:translate(-50%,0);transform-origin:top center;
+  animation:e-tear .9s cubic-bezier(.7,0,.3,1) both;animation-delay:var(--d,0s)}
+@keyframes e-fade{from{opacity:0}to{opacity:1}}
+@keyframes e-pop{from{opacity:0;transform:translate(-50%,-50%) scale(.45)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes item-pop{from{opacity:0;transform:scale(.45)}to{opacity:1;transform:scale(1)}}
+@keyframes e-rise{from{opacity:0;transform:translate(-50%,-38%)}to{opacity:1;transform:translate(-50%,-50%)}}
+@keyframes e-drop{from{opacity:0;transform:translate(-50%,-130%)}to{opacity:1;transform:translate(-50%,-50%)}}
+@keyframes e-fall{0%{opacity:0;transform:translate(-50%,-230%) rotate(-16deg)}25%{opacity:1}
+  to{opacity:1;transform:translate(-50%,-50%) rotate(0deg)}}
+@keyframes e-tear{from{opacity:1;transform:translate(-50%,0) scaleY(0)}to{opacity:1;transform:translate(-50%,0) scaleY(1)}}
+
+/* idle loops (on the img inside) */
+.f  {animation:loop-float 3.4s ease-in-out infinite}
+.f2 {animation:loop-float 4.6s ease-in-out infinite}
+.sh {animation:loop-shake .55s ease-in-out infinite}
+.tw {animation:loop-tw 2.2s ease-in-out infinite}
+@keyframes loop-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes loop-shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.6px) rotate(-1.2deg)}75%{transform:translateX(1.6px) rotate(1.2deg)}}
+@keyframes loop-tw{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.025);filter:brightness(1.12)}}
+
+/* the golden glow behind the cross */
+.glowdisc{position:absolute;left:var(--x);top:var(--y);width:var(--w);aspect-ratio:1;
+  transform:translate(-50%,-50%);border-radius:50%;opacity:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(249,204,54,.5) 0%,rgba(249,204,54,.18) 45%,transparent 70%)}
+.page.active .glowdisc{animation:glowin 1.4s ease .5s both, glowpulse 3s ease-in-out 1.9s infinite}
+@keyframes glowin{from{opacity:0;transform:translate(-50%,-50%) scale(.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes glowpulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.12)}}
+
+/* ---------- text ---------- */
+.text{width:100%;display:flex;flex-direction:column;gap:.7rem;align-items:center;margin-top:.6rem}
+.bubble{max-width:560px;width:100%;border-radius:22px;padding:.95rem 1.25rem;text-align:center;
+  font-weight:600;font-size:clamp(.9rem,2.7vw,1.04rem);line-height:1.5;opacity:0}
+.page.active .bubble{animation:e-rise-b .6s ease both;animation-delay:var(--d,0s)}
+@keyframes e-rise-b{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.bubble.navy{background:var(--navy);color:#fdfaf2;box-shadow:0 10px 26px rgba(31,43,91,.25)}
+.bubble.black{background:var(--ink);color:#fff;box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.bubble .ref{display:block;margin-top:.45rem;font-size:.64rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;opacity:.85}
+.bubble.navy .ref{color:var(--gold-soft)}
+.bubble.black .ref{color:#d8d4cc}
+.hl-g{color:var(--gold-soft);font-weight:700}
+.hl-r{color:var(--red);font-weight:700}
+.hl-n{color:var(--green);font-weight:700}
+.speech{background:#fff;border:3px solid var(--ink);border-radius:24px;padding:.55rem .95rem;
+  font-weight:700;font-size:clamp(.85rem,2.6vw,1rem);white-space:nowrap;position:relative}
+.speech::after{content:"";position:absolute;left:26%;bottom:-14px;width:0;height:0;
+  border:8px solid transparent;border-top:12px solid var(--ink)}
+.chip{background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:.45rem .85rem;
+  font-weight:700;font-size:clamp(.7rem,2.2vw,.85rem);white-space:nowrap;box-shadow:3px 4px 0 rgba(0,0,0,.18)}
+
+/* ---------- final page ---------- */
+.page.flow .art{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:1.1rem;padding-top:2vh}
+.h-grow{font-size:clamp(1.25rem,5vw,1.7rem);font-weight:800;
+  border-bottom:4px solid var(--ink);padding-bottom:.2rem;flex:none}
+.grow-row{display:flex;gap:4vw;justify-content:center;align-items:flex-start;width:100%;flex:none;margin-top:4.5rem}
+.grow-item{display:flex;flex-direction:column;align-items:center;gap:.5rem;width:30%;max-width:150px;opacity:0}
+.page.active .grow-item{animation:item-pop .5s cubic-bezier(.34,1.56,.64,1) both;animation-delay:var(--d,0s)}
+.grow-item .icon{height:11vh;max-height:84px;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.grow-item .icon img{max-height:100%;max-width:82%;width:auto;object-fit:contain}
+.grow-item span{font-weight:700;font-size:clamp(.78rem,2.4vw,.95rem);text-align:center}
+.note{font-weight:600;color:#4c4941;font-size:clamp(.85rem,2.6vw,1rem);text-align:center}
+.btns{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin-top:.3rem}
+.btn{display:inline-block;padding:.8rem 1.6rem;border-radius:999px;font-weight:700;font-size:.95rem;
+  text-decoration:none;color:#231a02;background:linear-gradient(180deg,var(--gold-soft),#e8a70f);
+  box-shadow:0 8px 22px rgba(226,166,20,.4)}
+.btn.ghost{background:none;color:var(--navy);border:2.5px solid var(--navy);box-shadow:none}
+.credit{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:#8b8578;text-align:center;margin-top:.4rem}
+.restart{background:none;border:none;font-family:inherit;font-weight:700;font-size:.8rem;
+  color:#8b8578;cursor:pointer;text-decoration:underline;margin-top:.2rem}
+
+/* ---------- chrome ---------- */
+#dots{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  display:flex;gap:7px;z-index:10}
+#dots i{width:8px;height:8px;border-radius:50%;background:rgba(22,21,19,.18);transition:all .3s;cursor:pointer}
+#dots i.on{background:var(--navy);transform:scale(1.35)}
+#back{position:fixed;top:calc(12px + env(safe-area-inset-top));left:14px;z-index:10;width:42px;height:42px;
+  border-radius:50%;border:2px solid rgba(22,21,19,.22);background:rgba(255,255,255,.75);
+  font-size:1.3rem;font-weight:700;color:var(--ink);cursor:pointer;display:none;line-height:1}
+#music{position:fixed;top:calc(12px + env(safe-area-inset-top));right:14px;z-index:10;width:42px;height:42px;
+  border-radius:50%;border:2px solid rgba(22,21,19,.22);background:rgba(255,255,255,.75);
+  color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
+#music.off{animation:attn 2.6s ease-in-out infinite}
+#music.off svg{opacity:.55}
+@keyframes attn{0%,100%{box-shadow:0 0 0 0 rgba(242,183,28,0)}50%{box-shadow:0 0 0 8px rgba(242,183,28,.22)}}
+#hint{position:fixed;left:50%;bottom:calc(38px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  z-index:10;font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:#8b8578;animation:hintpulse 1.8s ease-in-out infinite;pointer-events:none;white-space:nowrap}
+@keyframes hintpulse{0%,100%{opacity:.45}50%{opacity:1}}
+
+@media (prefers-reduced-motion: reduce){
+  .page.active .el,.page.active .bubble,.page.active .grow-item,.page.active .glowdisc
+    {animation:none !important;opacity:1 !important}
+  .el.tear{transform:translate(-50%,0) !important}
+  .f,.f2,.sh,.tw{animation:none !important}
+  #hint{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div id="book">
+
+  <!-- 1 · US and GOD -->
+  <section class="page" data-bg="white">
+    <div class="kicker">He Gave His Life · a story</div>
+    <div class="art">
+      <div class="el rise" style="--x:26%;--y:44%;--w:24%;--d:.15s"><img class="sh" src="storybook-assets/stick-anxious.png" alt="an anxious person"></div>
+      <div class="el fade" style="--x:26%;--y:86%;--w:30%;--d:.5s"><div class="cap">US</div></div>
+      <div class="el pop" style="--x:73%;--y:40%;--w:30%;--d:.35s"><img class="f" src="storybook-assets/crown.png" alt="a crown"></div>
+      <div class="el fade" style="--x:73%;--y:86%;--w:30%;--d:.6s"><div class="cap">God</div></div>
+    </div>
+    <div class="text">
+      <div class="bubble navy" style="--d:.7s">Have you ever felt <em>distant</em> from God?</div>
+      <div class="bubble navy" style="--d:1.15s">Do you want to be <em>closer</em> to him?</div>
+    </div>
+  </section>
+
+  <!-- 2 · creation -->
+  <section class="page" data-bg="gray">
+    <div class="art">
+      <div class="el pop" style="--x:50%;--y:50%;--w:52%;--d:.15s"><img class="f2" src="storybook-assets/globe.png" alt="the world"></div>
+    </div>
+    <div class="text">
+      <div class="bubble navy" style="--d:.55s">In the beginning, God made the world <span class="hl-g">good</span>.
+        There was <span class="hl-g">no distance</span> between God and man because there was no sin in the world!
+        In fact, there was no sin in us! And <span class="hl-g">God walked with people.</span></div>
+      <div class="bubble navy" style="--d:1.05s">"You knitted me together in my mother's womb…I am fearfully and wonderfully made."
+        <span class="ref">Psalm 139:13-14</span></div>
+    </div>
+  </section>
+
+  <!-- 3 · I'm a good person / separation -->
+  <section class="page" data-bg="white">
+    <div class="art">
+      <div class="el rise" style="--x:20%;--y:58%;--w:22%;--d:.15s"><img src="storybook-assets/stick-pointing.png" alt="a person pointing"></div>
+      <div class="el pop" style="--x:30%;--y:14%;--w:auto;--d:.55s"><div class="speech">I'm a good person!</div></div>
+      <div class="el tear" style="--x:56%;--y:2%;--w:13%;--d:1.05s"><img src="storybook-assets/crack.png" alt="a crack separating"></div>
+      <div class="el pop" style="--x:84%;--y:38%;--w:22%;--d:.35s"><img class="f" src="storybook-assets/crown.png" alt="a crown"></div>
+    </div>
+    <div class="text">
+      <div class="bubble black" style="--d:1.6s">We may think of ourselves as a "good" person, but the Bible says
+        <span class="hl-r">your sins</span> "have made a separation between you and your God"
+        <span class="ref">Isaiah 59:2</span></div>
+      <div class="bubble black" style="--d:2.05s">Although God made the world perfect — mankind chose <span class="hl-r">sin.</span></div>
+    </div>
+  </section>
+
+  <!-- 4 · dead in our sins -->
+  <section class="page" data-bg="gray">
+    <div class="art">
+      <div class="el fade" style="--x:52%;--y:0%;--w:13%;--d:0s;transform:translate(-50%,0)"><img src="storybook-assets/crack.png" alt="the crack"></div>
+      <div class="el rise" style="--x:20%;--y:62%;--w:17%;--d:.3s"><img src="storybook-assets/stick-sad.png" alt="a sad person"></div>
+      <div class="el fade" style="--x:86%;--y:34%;--w:17%;--d:.45s"><img class="f" src="storybook-assets/crown.png" alt="a distant crown"></div>
+    </div>
+    <div class="text">
+      <div class="bubble black" style="--d:.8s">The problem is we're all sinners! We are born "dead in our …
+        <span class="hl-r">sins</span> … separated from Christ … having no hope and without God in the world"
+        <span class="ref">Ephesians 2:1, 12</span></div>
+      <div class="bubble black" style="--d:1.3s">God is not a cosmic Santa Claus who chuckles at the "naughty" things we do.
+        He is the <em>holy</em> judge of the earth. He must punish <span class="hl-r">evil!</span></div>
+    </div>
+  </section>
+
+  <!-- 5 · we try to fix it -->
+  <section class="page" data-bg="white">
+    <div class="art">
+      <div class="el rise" style="--x:18%;--y:64%;--w:32%;--d:.15s"><img src="storybook-assets/stairs-a.png" alt="a staircase"></div>
+      <div class="el rise" style="--x:84%;--y:64%;--w:32%;--d:.3s"><img src="storybook-assets/stairs-b.png" alt="another staircase"></div>
+      <div class="el fade" style="--x:51%;--y:86%;--w:38%;--d:.5s"><img src="storybook-assets/pit.png" alt="a deep pit"></div>
+      <div class="el pop" style="--x:14%;--y:34%;--w:16%;--d:.8s"><img src="storybook-assets/rescuer-running.png" alt="a person climbing" style="transform:scaleX(-1)"></div>
+      <div class="el pop" style="--x:26%;--y:12%;--w:auto;--d:1.05s"><div class="chip">Being nice</div></div>
+      <div class="el pop" style="--x:53%;--y:6%;--w:auto;--d:1.25s"><div class="chip">Saying Prayers</div></div>
+      <div class="el pop" style="--x:78%;--y:14%;--w:auto;--d:1.45s"><div class="chip">Attending church</div></div>
+    </div>
+    <div class="text">
+      <div class="bubble black" style="--d:1.8s">Many of us try to deal with <span class="hl-r">sin</span> on our own.
+        We change our habits or try to be good because we hope that could take away our
+        <span class="hl-r">guilt, anxiety, and fear.</span></div>
+    </div>
+  </section>
+
+  <!-- 6 · nothing we can do -->
+  <section class="page" data-bg="gray">
+    <div class="art">
+      <div class="el fade" style="--x:18%;--y:64%;--w:32%;--d:0s"><img src="storybook-assets/stairs-a.png" alt="a staircase"></div>
+      <div class="el fade" style="--x:84%;--y:64%;--w:32%;--d:0s"><img src="storybook-assets/stairs-b.png" alt="another staircase"></div>
+      <div class="el fade" style="--x:51%;--y:86%;--w:38%;--d:0s"><img src="storybook-assets/pit.png" alt="the pit"></div>
+      <div class="el fall" style="--x:51%;--y:44%;--w:24%;--d:.5s"><img src="storybook-assets/stick-falling.png" alt="a person falling"></div>
+    </div>
+    <div class="text">
+      <div class="bubble black" style="--d:1.5s">But God's word says there is <em>nothing we</em> could do to bridge this gap
+        between God and man.</div>
+      <div class="bubble black" style="--d:1.95s">"For all have <span class="hl-r">sinned</span> and fallen short of the glory of God"
+        <span class="ref">Romans 3:23</span></div>
+    </div>
+  </section>
+
+  <!-- 7 · But God -->
+  <section class="page" data-bg="white">
+    <div class="art">
+      <div class="el fade" style="--x:18%;--y:64%;--w:32%;--d:0s"><img src="storybook-assets/stairs-a.png" alt="a staircase"></div>
+      <div class="el fade" style="--x:84%;--y:64%;--w:32%;--d:0s"><img src="storybook-assets/stairs-b.png" alt="another staircase"></div>
+      <div class="el fade" style="--x:51%;--y:86%;--w:38%;--d:0s"><img src="storybook-assets/pit.png" alt="the pit"></div>
+      <div class="el fade" style="--x:48%;--y:70%;--w:16%;--d:.2s"><img src="storybook-assets/stick-falling.png" alt="a person in the pit"></div>
+      <div class="el pop" style="--x:66%;--y:44%;--w:24%;--d:.55s"><img src="storybook-assets/rescuer-reaching.png" alt="one who reaches down to save"></div>
+      <div class="el fade" style="--x:88%;--y:38%;--w:11%;--d:.3s"><img src="storybook-assets/rescuer-running.png" alt="running to the rescue"></div>
+    </div>
+    <div class="text">
+      <div class="bubble navy" style="--d:1s">But God demonstrates his <span class="hl-r">love</span> for us in this…</div>
+      <div class="bubble navy" style="--d:1.45s">While we were still sinners Christ died for us!
+        <span class="ref">Romans 5:8</span></div>
+    </div>
+  </section>
+
+  <!-- 8 · the cross -->
+  <section class="page" data-bg="white">
+    <div class="art">
+      <div class="glowdisc" style="--x:50%;--y:44%;--w:76%"></div>
+      <div class="el fade" style="--x:50%;--y:88%;--w:34%;--d:.1s"><img src="storybook-assets/pit.png" alt="the pit"></div>
+      <div class="el drop" style="--x:50%;--y:44%;--w:38%;--d:.35s"><img src="storybook-assets/cross.png" alt="the cross"></div>
+    </div>
+    <div class="text">
+      <div class="bubble navy" style="--d:1.15s">Jesus died on the <span class="hl-r">cross</span> to take the punishment
+        that we deserved!</div>
+      <div class="bubble navy" style="--d:1.6s">3 days later he rose from the dead! This proved God accepted
+        <span class="hl-r">his sacrifice.</span> Now anyone who places their trust in him "shall be saved"
+        <span class="ref">Romans 10:9</span></div>
+    </div>
+  </section>
+
+  <!-- 9 · a free gift -->
+  <section class="page" data-bg="gray">
+    <div class="art">
+      <div class="el rise" style="--x:32%;--y:52%;--w:26%;--d:.15s"><img src="storybook-assets/stick-kneeling.png" alt="a person kneeling"></div>
+      <div class="el pop" style="--x:62%;--y:62%;--w:15%;--d:.65s"><img class="tw" src="storybook-assets/gift.png" alt="a free gift"></div>
+    </div>
+    <div class="text">
+      <div class="bubble navy" style="--d:1s">The Bible says this <span class="hl-n">free gift</span> of God comes through
+        repentance and faith. "For by <span class="hl-n">grace</span> you have been saved through faith, and this is not
+        your own doing it is the <span class="hl-n">gift</span> of God"
+        <span class="ref">Ephesians 2:8</span></div>
+      <div class="bubble navy" style="--d:1.45s">Repentance is turning away from your sin. Faith is trusting in
+        Jesus's sacrifice alone for the forgiveness of your sins.</div>
+      <div class="bubble navy" style="--d:1.9s">Will you receive this <span class="hl-n">free gift?</span>
+        Will you trust in Christ alone for the <span class="hl-n">forgiveness</span> of your sins?</div>
+    </div>
+  </section>
+
+  <!-- 10 · a new creation -->
+  <section class="page" data-bg="white">
+    <div class="art">
+      <div class="el pop" style="--x:38%;--y:48%;--w:28%;--d:.2s"><img class="tw" src="storybook-assets/stick-new.png" alt="a new creation"></div>
+      <div class="el pop" style="--x:76%;--y:30%;--w:24%;--d:.5s"><img class="f" src="storybook-assets/crown.png" alt="close to God"></div>
+      <div class="el pop" style="--x:78%;--y:72%;--w:12%;--d:.8s"><img src="storybook-assets/gift.png" alt="the gift received"></div>
+    </div>
+    <div class="text">
+      <div class="bubble navy" style="--d:1.1s">When God <span class="hl-n">forgives</span> a person, he becomes a
+        <span class="hl-n">"new creation"</span> and God's Holy Spirit lives inside of him!
+        <span class="ref">2 Corinthians 5:17</span></div>
+      <div class="bubble navy" style="--d:1.55s">If God has saved you, your <span class="hl-n">life</span> will never be
+        the same. You won't be sinless, but you will sin less! You won't be perfect, but all your sins have been perfectly
+        <span class="hl-n">forgiven</span>, and now you can walk in fellowship with God.</div>
+    </div>
+  </section>
+
+  <!-- 11 · he will remake the world -->
+  <section class="page" data-bg="gray">
+    <div class="art">
+      <div class="el pop" style="--x:50%;--y:48%;--w:48%;--d:.15s"><img class="f2" src="storybook-assets/globe.png" alt="a new world"></div>
+    </div>
+    <div class="text">
+      <div class="bubble navy" style="--d:.6s">Not only can he make you <span class="hl-g">new</span>, but he is going to
+        remake the entire world. One day, Jesus will return and God will create <span class="hl-g">a new heavens</span>
+        and <span class="hl-g">a new earth.</span> Only those who have put their trust in Christ will walk with God in
+        <span class="hl-g">eternal life</span> forever.
+        <span class="ref">Revelation 21:3-4</span></div>
+    </div>
+  </section>
+
+  <!-- 12 · ways to grow -->
+  <section class="page flow" data-bg="white">
+    <div class="art">
+      <div class="h-grow">Ways to grow with God</div>
+      <div class="grow-row">
+        <div class="grow-item" style="--d:.25s"><div class="icon"><img src="storybook-assets/bible.png" alt="a Bible"></div><span>Read the Bible</span></div>
+        <div class="grow-item" style="--d:.45s"><div class="icon"><img src="storybook-assets/friends.png" alt="friends"></div><span>Pray and Obey</span></div>
+        <div class="grow-item" style="--d:.65s"><div class="icon"><img src="storybook-assets/church.png" alt="a church"></div><span>Join a local church</span></div>
+      </div>
+      <p class="note">These things do not save you, but they help you grow.</p>
+      <div class="btns">
+        <a class="btn" href="https://www.mytrinitybible.com/contact" target="_blank" rel="noopener">Reach out to us</a>
+        <a class="btn ghost" href="https://www.mytrinitybible.com/going-deeper/" target="_blank" rel="noopener">More resources</a>
+      </div>
+      <div class="credit">Trinity Bible Church</div>
+      <button class="restart" id="restart">↺ Start the story over</button>
+    </div>
+  </section>
+
+</div>
+
+<button id="back" aria-label="Previous page">‹</button>
+<button id="music" class="off" aria-label="Toggle music">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
+</button>
+<div id="hint">tap anywhere ▸</div>
+<div id="dots"></div>
+<audio id="bgm" src="../music.mp3" loop preload="auto"></audio>
+
+<script>
+(function(){
+  var pages=[].slice.call(document.querySelectorAll('.page'));
+  var book=document.getElementById('book'), dots=document.getElementById('dots');
+  var back=document.getElementById('back'), hint=document.getElementById('hint');
+  var cur=0, started=false;
+
+  pages.forEach(function(_,i){var d=document.createElement('i');
+    d.addEventListener('click',function(e){e.stopPropagation();go(i);});dots.appendChild(d);});
+
+  function go(i){
+    if(i<0||i>=pages.length)return;
+    pages[cur].classList.remove('active');
+    cur=i;
+    pages[cur].classList.add('active');
+    book.classList.toggle('gray',pages[cur].dataset.bg==='gray');
+    [].slice.call(dots.children).forEach(function(d,j){d.classList.toggle('on',j===cur);});
+    back.style.display=cur>0?'block':'none';
+    if(cur>0)hint.style.display='none';
+  }
+
+  /* music: same track as the main site; starts softly on the first tap */
+  var bgm=document.getElementById('bgm'), mbtn=document.getElementById('music');
+  var playing=false, fadeTimer=null, TARGET=0.5;
+  function fadeTo(t){clearInterval(fadeTimer);fadeTimer=setInterval(function(){
+    var d=t-bgm.volume;
+    if(Math.abs(d)<0.02){bgm.volume=Math.max(0,Math.min(1,t));clearInterval(fadeTimer);if(t===0)bgm.pause();return;}
+    bgm.volume=Math.max(0,Math.min(1,bgm.volume+d*0.08));},50);}
+  function musicOn(){var p=bgm.play();if(p&&p.catch)p.catch(function(){});
+    playing=true;mbtn.classList.remove('off');bgm.volume=bgm.volume||0;fadeTo(TARGET);}
+  function musicOff(){playing=false;mbtn.classList.add('off');fadeTo(0);}
+  mbtn.addEventListener('click',function(e){e.stopPropagation();playing?musicOff():musicOn();});
+
+  function advance(){if(!started){started=true;musicOn();}
+    if(cur<pages.length-1)go(cur+1);}
+
+  book.addEventListener('click',function(e){
+    if(e.target.closest('a,button'))return;
+    advance();});
+  back.addEventListener('click',function(e){e.stopPropagation();go(cur-1);});
+  document.getElementById('restart').addEventListener('click',function(e){e.stopPropagation();go(0);});
+
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' ')advance();
+    else if(e.key==='ArrowLeft')go(cur-1);});
+
+  var tx=null;
+  addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+  addEventListener('touchend',function(e){
+    if(tx===null)return;var dx=e.changedTouches[0].clientX-tx;tx=null;
+    if(dx<-45)advance();else if(dx>45)go(cur-1);},{passive:true});
+
+  go(0);
+})();
+</script>
+</body>
+</html>
