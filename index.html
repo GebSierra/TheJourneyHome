@@ -568,7 +568,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
     }
     scrollAnim=requestAnimationFrame(step);
   }
-  function scrollToStoryT(t){var m=document.body.scrollHeight-innerHeight;animatedScrollTo(storyTToRaw(t)*m,1300);}
+  function scrollToStoryT(t){var m=document.body.scrollHeight-innerHeight;animatedScrollTo(storyTToRaw(t)*m,2000);}
   function goNext(){for(var i=0;i<BEATS.length;i++){if(BEATS[i].anchor>curT+0.006){scrollToStoryT(BEATS[i].anchor);return;}}}
   function goPrev(){for(var i=BEATS.length-1;i>=0;i--){if(BEATS[i].anchor<curT-0.006){scrollToStoryT(BEATS[i].anchor);return;}}scrollToStoryT(0);}
 
