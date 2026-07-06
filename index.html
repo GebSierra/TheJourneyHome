@@ -581,6 +581,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
 
   addEventListener('click',function(e){
     if(e.target.closest('#music,#fs,#back,#dots,a,button'))return;
+    if(window.__ensureMusicOn)window.__ensureMusicOn();
     goNext();});
   addEventListener('keydown',function(e){
     if(e.key==='ArrowRight'||e.key===' ')goNext();
@@ -744,6 +745,10 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
       playing=true;btn.classList.add('on');btn.classList.remove('off');fadeTo(TARGET);hint.classList.remove('show');}
     else{playing=false;btn.classList.remove('on');btn.classList.add('off');fadeTo(0);}}
   btn.addEventListener('click',toggle);
+  /* first tap to advance the story also starts the music (Bruno Simon-style single
+     entry gesture) — only fires once, so muting later via the button isn't overridden */
+  var musicAutoStarted=false;
+  window.__ensureMusicOn=function(){if(musicAutoStarted)return;musicAutoStarted=true;if(!playing)toggle();};
   setTimeout(function(){if(!playing)hint.classList.add('show');},1800);   // stays up (gently bobbing) until music is turned on
 
   /* fullscreen toggle */
