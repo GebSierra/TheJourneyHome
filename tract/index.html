@@ -130,6 +130,12 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
 #music.off{animation:attn 2.6s ease-in-out infinite}
 #music.off svg{opacity:.55}
 @keyframes attn{0%,100%{box-shadow:0 0 0 0 rgba(242,183,28,0)}50%{box-shadow:0 0 0 8px rgba(242,183,28,.22)}}
+#fs{position:fixed;top:calc(64px + env(safe-area-inset-top));right:14px;z-index:10;width:42px;height:42px;
+  border-radius:50%;border:2px solid rgba(22,21,19,.22);background:rgba(255,255,255,.75);
+  color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
+#fs .ic-exit{display:none}
+#fs.on .ic-enter{display:none}
+#fs.on .ic-exit{display:block}
 #hint{position:fixed;left:50%;bottom:calc(38px + env(safe-area-inset-bottom));transform:translateX(-50%);
   z-index:10;font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
   color:#8b8578;animation:hintpulse 1.8s ease-in-out infinite;pointer-events:none;white-space:nowrap}
@@ -351,6 +357,10 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
 <button id="music" class="off" aria-label="Toggle music">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
 </button>
+<button id="fs" aria-label="Toggle fullscreen">
+  <svg class="ic-enter" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+  <svg class="ic-exit" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+</button>
 <div id="hint">tap anywhere ▸</div>
 <div id="dots"></div>
 <audio id="bgm" src="../music.mp3" loop preload="auto"></audio>
@@ -365,28 +375,64 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
   pages.forEach(function(_,i){var d=document.createElement('i');
     d.addEventListener('click',function(e){e.stopPropagation();go(i);});dots.appendChild(d);});
 
+  /* subtle pointer parallax — the illustrated scene leans very slightly toward the
+     cursor (desktop/trackpad only; harmless no-op on touch, which never fires mousemove) */
+  var parX=0,parY=0;
+  addEventListener('mousemove',function(e){
+    parX=(e.clientX/innerWidth)*2-1; parY=(e.clientY/innerHeight)*2-1;
+    var art=document.querySelector('.page.active .art');
+    if(art)art.style.transform='translate('+(parX*-7)+'px,'+(parY*-5)+'px)';
+  },{passive:true});
+
   function go(i){
     if(i<0||i>=pages.length)return;
     pages[cur].classList.remove('active');
     cur=i;
     pages[cur].classList.add('active');
-    book.classList.toggle('gray',pages[cur].dataset.bg==='gray');
+    var isGray=pages[cur].dataset.bg==='gray';
+    book.classList.toggle('gray',isGray);
     [].slice.call(dots.children).forEach(function(d,j){d.classList.toggle('on',j===cur);});
     back.style.display=cur>0?'block':'none';
     if(cur>0)hint.style.display='none';
+    var art=document.querySelector('.page.active .art');
+    if(art)art.style.transform='translate('+(parX*-7)+'px,'+(parY*-5)+'px)';
+    if(musicFilter)musicFilter.frequency.setTargetAtTime(isGray?2400:20000,actx.currentTime,0.6);
   }
 
-  /* music: same track as the main site; starts softly on the first tap */
+  /* music: same track as the main site; starts softly on the first tap. Once playing,
+     it's routed through a lowpass filter that muffles on the darker "sin" pages and
+     opens back up on the hopeful ones — a quiet audio echo of the page's own mood. */
   var bgm=document.getElementById('bgm'), mbtn=document.getElementById('music');
   var playing=false, fadeTimer=null, TARGET=0.5;
+  var actx=null, musicFilter=null;
+  function initAudioGraph(){if(actx)return;try{
+    actx=new (window.AudioContext||window.webkitAudioContext)();
+    var src=actx.createMediaElementSource(bgm);
+    musicFilter=actx.createBiquadFilter();musicFilter.type='lowpass';musicFilter.frequency.value=20000;
+    src.connect(musicFilter);musicFilter.connect(actx.destination);
+  }catch(e){}}
   function fadeTo(t){clearInterval(fadeTimer);fadeTimer=setInterval(function(){
     var d=t-bgm.volume;
     if(Math.abs(d)<0.02){bgm.volume=Math.max(0,Math.min(1,t));clearInterval(fadeTimer);if(t===0)bgm.pause();return;}
     bgm.volume=Math.max(0,Math.min(1,bgm.volume+d*0.08));},50);}
   function musicOn(){var p=bgm.play();if(p&&p.catch)p.catch(function(){});
+    initAudioGraph();if(actx&&actx.state==='suspended')actx.resume();
+    if(musicFilter)musicFilter.frequency.setTargetAtTime(pages[cur].dataset.bg==='gray'?2400:20000,actx.currentTime,0.6);
     playing=true;mbtn.classList.remove('off');bgm.volume=bgm.volume||0;fadeTo(TARGET);}
   function musicOff(){playing=false;mbtn.classList.add('off');fadeTo(0);}
   mbtn.addEventListener('click',function(e){e.stopPropagation();playing?musicOff():musicOn();});
+
+  /* fullscreen toggle */
+  var fsBtn=document.getElementById('fs');
+  function inFS(){return document.fullscreenElement||document.webkitFullscreenElement;}
+  fsBtn.addEventListener('click',function(e){e.stopPropagation();
+    var el=document.documentElement;
+    if(!inFS()){(el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el);}
+    else{(document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document);}
+  });
+  function fsSync(){fsBtn.classList.toggle('on',!!inFS());}
+  document.addEventListener('fullscreenchange',fsSync);
+  document.addEventListener('webkitfullscreenchange',fsSync);
 
   function advance(){if(!started){started=true;musicOn();}
     if(cur<pages.length-1)go(cur+1);}
