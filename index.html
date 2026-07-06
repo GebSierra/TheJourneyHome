@@ -378,24 +378,6 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
   for(var i=0;i<4;i++){place(halfA,rock(0.8+Math.random()),randDir(1,0.55),R-0.3);}
   for(var i=0;i<4;i++){place(halfB,rock(0.8+Math.random()),randDir(-1,0.55),R-0.3);}
 
-  // a winding river on each half, meeting at the seam — visibly severed when the world cracks.
-  // one shared material so it can gray out during sin and revive with healing (not in grassMats)
-  var riverMat=new THREE.MeshStandardMaterial({color:0x3d87c9,emissive:0x1f5d8e,emissiveIntensity:0.5,roughness:0.3,flatShading:true});
-  function river(half,dirs){
-    // a spline through points on a sphere cuts straight chords that dip below the surface,
-    // so resample the rough curve finely and re-project every sample back onto the sphere
-    // before building the tube — that keeps the whole path hugging the ground, not just its ends.
-    var ctrl=dirs.map(function(d){return new THREE.Vector3(d[0],d[1],d[2]).normalize();});
-    var rough=new THREE.CatmullRomCurve3(ctrl);
-    var pts=[];
-    for(var i=0;i<=48;i++){var p=rough.getPoint(i/48);p.normalize().multiplyScalar(R-0.32);pts.push(p);}
-    var tube=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),90,0.5,6,false),riverMat);
-    tube.receiveShadow=true;half.add(tube);return tube;}
-  river(halfA,[[0.40,0.62,0.06],[0.50,0.50,0.34],[0.45,0.35,0.58],[0.28,0.22,0.76],[0.10,0.12,0.88]]);
-  river(halfB,[[0.40,0.60,-0.06],[0.28,0.48,-0.40],[0.10,0.34,-0.66],[-0.10,0.18,-0.84]]);
-  var lake=new THREE.Group(),lakeM=new THREE.Mesh(new THREE.CylinderGeometry(2.4,2.9,0.5,10),riverMat);lakeM.position.y=0.1;lake.add(lakeM);
-  place(halfA,lake,new THREE.Vector3(0.10,0.12,0.88),R-0.32);
-
   // a few sheep and a deer on the slopes (below the summit, like the trees)
   place(halfA,sheep(1),randDir(1,0.5),R-0.15);
   place(halfA,sheep(0.85),randDir(1,0.5),R-0.15);
@@ -647,10 +629,8 @@ body{font-family:'Inter',system-ui,sans-serif;color:#fff7ec;overflow-x:hidden;
       _c.copy(greenC).lerp(grayC,sinAmt*(1-hw*0.9));_c.lerp(vividC,hw*0.55);
       grassMats[gi].color.copy(_c);
     }
-    // river and clouds gray out with the broken world and revive with healing
+    // clouds gray out with the broken world and revive with healing
     var worldGray=sinAmt*(1-healAmt);
-    riverMat.color.copy(_c.set(0x3d87c9).lerp(_c2.set(0x6f7880),worldGray));
-    riverMat.emissiveIntensity=0.15+0.45*(1-worldGray);
     _c.set(0xf5f2ea).lerp(_c2.set(0x8d9096),worldGray);
     for(var cm=0;cm<cloudMats.length;cm++){cloudMats[cm].color.copy(_c);}
     for(var ci2=0;ci2<clouds.length;ci2++){var cl2=clouds[ci2],cu=cl2.userData;
