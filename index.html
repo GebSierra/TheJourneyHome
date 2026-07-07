@@ -38,6 +38,7 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
 .el{position:absolute;left:var(--x);top:var(--y);width:var(--w);
   transform:translate(-50%,-50%);opacity:0}
 .el img{width:100%;height:auto;display:block;pointer-events:none}
+.el canvas.globe3d{width:100%;aspect-ratio:1;display:block;pointer-events:none}
 .el .cap{font-weight:800;font-size:clamp(1.3rem,6vw,2rem);letter-spacing:.04em;text-align:center}
 
 /* entrances (on .el, triggered when page becomes active) */
@@ -116,6 +117,26 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
 .restart{background:none;border:none;font-family:inherit;font-weight:700;font-size:.8rem;
   color:#8b8578;cursor:pointer;text-decoration:underline;margin-top:.2rem}
 
+/* ---------- asset credits (unobtrusive, final page only) ---------- */
+#credits-btn{position:absolute;right:calc(10px + env(safe-area-inset-right));
+  bottom:calc(10px + env(safe-area-inset-bottom));width:26px;height:26px;border-radius:50%;
+  border:1.5px solid rgba(22,21,19,.22);background:rgba(255,255,255,.6);color:#8b8578;
+  font-size:.7rem;font-weight:700;font-family:inherit;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;line-height:1;opacity:.55}
+#credits-btn:hover{opacity:1}
+#credits-modal{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;
+  background:rgba(14,19,39,.55);padding:20px}
+#credits-modal.open{display:flex}
+#credits-card{background:#fdfaf2;border-radius:18px;max-width:360px;width:100%;padding:1.4rem 1.5rem;
+  text-align:left;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+#credits-card h2{font-size:1rem;font-weight:800;margin-bottom:.8rem;color:var(--ink)}
+#credits-card ul{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:1rem}
+#credits-card li{font-size:.82rem;line-height:1.4;color:#4c4941}
+#credits-card li b{color:var(--ink)}
+#credits-card a{color:var(--navy);text-decoration:underline}
+#credits-close{width:100%;padding:.6rem;border-radius:999px;border:2px solid var(--navy);
+  background:none;color:var(--navy);font-family:inherit;font-weight:700;font-size:.85rem;cursor:pointer}
+
 /* ---------- chrome ---------- */
 #dots{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);
   display:flex;gap:7px;z-index:10}
@@ -172,7 +193,7 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
   <!-- 2 · creation -->
   <section class="page" data-bg="gray">
     <div class="art">
-      <div class="el pop" style="--x:50%;--y:50%;--w:52%;--d:.15s"><img class="f2" src="storybook-assets/globe.png" alt="the world"></div>
+      <div class="el pop" style="--x:50%;--y:50%;--w:52%;--d:.15s"><canvas class="f2 globe3d" role="img" aria-label="the world"></canvas></div>
     </div>
     <div class="text">
       <div class="bubble navy" style="--d:.55s">In the beginning, God made the world <span class="hl-g">good</span>.
@@ -321,7 +342,7 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
   <!-- 11 · he will remake the world -->
   <section class="page" data-bg="gray">
     <div class="art">
-      <div class="el pop" style="--x:50%;--y:48%;--w:48%;--d:.15s"><img class="f2" src="storybook-assets/globe.png" alt="a new world"></div>
+      <div class="el pop" style="--x:50%;--y:48%;--w:48%;--d:.15s"><canvas class="f2 globe3d" role="img" aria-label="a new world"></canvas></div>
     </div>
     <div class="text">
       <div class="bubble navy" style="--d:.6s">Not only can he make you <span class="hl-g">new</span>, but he is going to
@@ -349,8 +370,20 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
       <div class="credit">Trinity Bible Church</div>
       <button class="restart" id="restart">↺ Start the story over</button>
     </div>
+    <button id="credits-btn" aria-label="Asset credits" aria-haspopup="dialog">i</button>
   </section>
 
+</div>
+
+<div id="credits-modal" role="dialog" aria-label="Asset credits">
+  <div id="credits-card">
+    <h2>3D asset credits</h2>
+    <ul>
+      <li><b>Earth</b> by JohnXina6And9, licensed under
+        <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">Creative Commons Attribution</a>.</li>
+    </ul>
+    <button id="credits-close">Close</button>
+  </div>
 </div>
 
 <button id="back" aria-label="Previous page">‹</button>
@@ -443,6 +476,15 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
   back.addEventListener('click',function(e){e.stopPropagation();go(cur-1);});
   document.getElementById('restart').addEventListener('click',function(e){e.stopPropagation();go(0);});
 
+  /* asset credits modal — unobtrusive, only reachable from the last page */
+  var creditsModal=document.getElementById('credits-modal');
+  document.getElementById('credits-btn').addEventListener('click',function(e){
+    e.stopPropagation();creditsModal.classList.add('open');});
+  document.getElementById('credits-close').addEventListener('click',function(e){
+    e.stopPropagation();creditsModal.classList.remove('open');});
+  creditsModal.addEventListener('click',function(e){
+    if(e.target===creditsModal)creditsModal.classList.remove('open');});
+
   addEventListener('keydown',function(e){
     if(e.key==='ArrowRight'||e.key===' ')advance();
     else if(e.key==='ArrowLeft')go(cur-1);});
@@ -454,6 +496,79 @@ body{font-family:'Poppins',system-ui,sans-serif;background:#0e1327;color:var(--i
     if(dx<-45)advance();else if(dx>45)go(cur-1);},{passive:true});
 
   go(0);
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fflate@0.6.9/umd/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
+<script>
+(function(){
+  var canvases=[].slice.call(document.querySelectorAll('canvas.globe3d'));
+  if(!canvases.length||!window.THREE)return;
+  var widgets=canvases.map(function(canvas){
+    var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+    renderer.setClearAlpha(0);
+    var scene=new THREE.Scene();
+    var camera=new THREE.PerspectiveCamera(30,1,0.1,50);
+    camera.position.set(0,0,6);
+    scene.add(new THREE.AmbientLight(0xffffff,0.75));
+    scene.add(new THREE.HemisphereLight(0xffffff,0x445533,0.6));
+    var sun=new THREE.DirectionalLight(0xfff4dd,0.7);sun.position.set(-4,3,5);scene.add(sun);
+    var group=new THREE.Group();group.rotation.z=0.4;scene.add(group); // gentle axial tilt
+    return {canvas:canvas,renderer:renderer,scene:scene,camera:camera,group:group,w:0,h:0,model:null};
+  });
+
+  function sync(widget){
+    var r=widget.canvas.getBoundingClientRect();
+    if(!r.width||!r.height)return false; // page not active / not laid out yet
+    if(r.width===widget.w&&r.height===widget.h)return true;
+    widget.w=r.width;widget.h=r.height;
+    widget.renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+    widget.renderer.setSize(r.width,r.height,false);
+    widget.camera.aspect=r.width/r.height;widget.camera.updateProjectionMatrix();
+    return true;
+  }
+
+  // load the model once, then give each globe its own clone so they spin independently
+  new THREE.FBXLoader().load('assets/earth.fbx',function(obj){
+    obj.traverse(function(n){
+      if(n.isMesh&&n.material){
+        // matte material per-mesh; only tint by vertex color where the geometry actually has it —
+        // forcing vertexColors on a mesh with no color attribute reads as black and blacks it out
+        var hasColor=!!(n.geometry&&n.geometry.attributes&&n.geometry.attributes.color);
+        var mats=[].concat(n.material).map(function(m){
+          return new THREE.MeshLambertMaterial({color:m.color?m.color.clone():0xffffff,vertexColors:hasColor});
+        });
+        n.material=Array.isArray(n.material)?mats:mats[0];
+      }
+    });
+    var box=new THREE.Box3().setFromObject(obj);
+    var size=box.getSize(new THREE.Vector3());
+    var maxDim=Math.max(size.x,size.y,size.z);
+    var s=2.8/maxDim; // fills the frame the same way the flat globe icon used to
+    var center=box.getCenter(new THREE.Vector3());
+    widgets.forEach(function(w){
+      // center the geometry on an inner wrapper so the spin below rotates the globe
+      // in place instead of orbiting it around an off-center pivot
+      var inner=new THREE.Group();
+      inner.position.copy(center).multiplyScalar(-s);
+      var inst=obj.clone();
+      inst.scale.setScalar(s);
+      inner.add(inst);
+      w.group.add(inner);
+      w.model=inner;
+    });
+  });
+
+  (function tick(){
+    widgets.forEach(function(w){
+      var ready=sync(w);
+      if(w.model)w.model.rotation.y+=0.0035; // slow, steady spin
+      if(ready)w.renderer.render(w.scene,w.camera);
+    });
+    requestAnimationFrame(tick);
+  })();
 })();
 </script>
 </body>
